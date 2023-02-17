@@ -1,12 +1,13 @@
-import React from 'react';
-import './App.css';
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import React from 'react'
+import './App.css'
 
-function App() {
+function App () {
   return (
     <div className="">
       Hello World
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
