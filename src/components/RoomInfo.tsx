@@ -16,7 +16,7 @@ export const RoomInfo: React.FC<Props> = ({ room }) => {
   const username = useAppSelector(selectUsername)
 
   const joinRoom = () => {
-    socket.emit('join_room', { currentRoom: room, username })
+    socket.emit('join_room', { currentRoom: room.name, username })
     dispatch(setCurrentRoom(room.name))
   }
 

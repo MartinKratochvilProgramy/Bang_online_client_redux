@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { selectCurrentRoom } from './features/currentRoomSlice'
 import { useAppDispatch, useAppSelector } from './app/hooks'
 import { selectGameStarted } from './features/gameStartedSlice'
+import { setRooms } from './features/roomsSlice'
 // import { type User } from './types/user'
 // import { type Card } from './types/card'
 import './App.css'
@@ -30,9 +31,9 @@ function App () {
     //     setMyCharacterChoice(characters[username])
     //   })
 
-    //   socket.on('rooms', (rooms) => {
-    //     setRooms(rooms)
-    //   })
+    socket.on('rooms', (rooms) => {
+      dispatch(setRooms(rooms))
+    })
 
     socket.on('get_players', (players) => {
       console.log('got players ', players)
@@ -101,9 +102,8 @@ function App () {
     return () => {
       //     socket.off('username_changed')
       //     socket.off('get_character_choices')
-      //     socket.off('rooms')
+      socket.off('rooms')
       socket.off('get_players')
-
       //     socket.off('console')
       //     socket.off('game_started')
       //     socket.off('characters')
@@ -117,13 +117,6 @@ function App () {
     }
   }, [currentRoom])
   // }, [consoleOutput, currentRoom, username])
-
-  // const leaveRoom = () => {
-  //   socket.emit('leave_room', { username, currentRoom })
-  //   setAdmin(false)
-  //   setGameStarted(false)
-  //   setCurrentRoom(null)
-  // }
 
   // function startGame () {
   //   const players = users.map((user: User) => {

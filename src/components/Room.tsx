@@ -26,7 +26,7 @@ export const Room = () => {
     socket.emit('start_game', { currentPlayers, currentRoom })
   }
 
-  const leaveRoom = () => {
+  function leaveRoom () {
     socket.emit('leave_room', { username, currentRoom })
     dispatch(setIsAdminFalse())
     dispatch(setGameStartedFalse())
