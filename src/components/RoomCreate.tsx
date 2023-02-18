@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { setAdminTrue } from '../features/adminSlice'
+import { setIsAdminTrue } from '../features/isAdminSlice'
 import { selectUsername } from '../features/usernameSlice'
 import { selectRooms } from '../features/roomsSlice'
 import { setCurrentRoom } from '../features/currentRoomSlice'
@@ -17,7 +17,7 @@ export const RoomCreate = () => {
 
   function createRoom (roomName: string) {
     // don't allow already existing room to be created
-    dispatch(setAdminTrue())
+    dispatch(setIsAdminTrue())
     for (const room of rooms) {
       if (room.name === roomName) {
         return
@@ -40,7 +40,7 @@ export const RoomCreate = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className='mt-8 text-center'>
+      className='mt-8'>
       <label className="text-outline font-rye text-5xl text-white my-6">
                 Create new room
       </label>

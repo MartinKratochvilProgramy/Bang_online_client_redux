@@ -21,11 +21,11 @@ export const RoomSelect = () => {
   } else {
     return (
       <div className='flex justify-center flex-col'>
-        <h2 className='text-outline text-center font-rye text-3xl text-white mt-3 mb-6'>
+        <h2 className='text-outline font-rye text-3xl text-white mt-3 mb-6'>
           {username}
         </h2>
 
-        <h2 className='text-outline text-center font-rye text-5xl text-white my-6'>
+        <h2 className='text-outline font-rye text-5xl text-white my-6'>
           Join existing room
         </h2>
         <div className={`inline-grid gap-6 justify-center items-center ${gridStyle}`}>

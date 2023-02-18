@@ -15,11 +15,14 @@ export const gameStartedSlice = createSlice({
   reducers: {
     setGameStartedTrue: (state) => {
       state.value = true
+    },
+    setGameStartedFalse: (state) => {
+      state.value = false
     }
   }
 })
 
-export const { setGameStartedTrue } = gameStartedSlice.actions
+export const { setGameStartedTrue, setGameStartedFalse } = gameStartedSlice.actions
 
 export const selectGameStarted = (state: RootState) => state.gameStarted.value
 

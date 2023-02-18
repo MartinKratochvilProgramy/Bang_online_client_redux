@@ -1,119 +1,121 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { selectCurrentRoom } from './features/currentRoomSlice'
-import { useAppSelector } from './app/hooks'
+import { useAppDispatch, useAppSelector } from './app/hooks'
 import { selectGameStarted } from './features/gameStartedSlice'
 // import { type User } from './types/user'
 // import { type Card } from './types/card'
-// import './App.css'
-
-// import { socket } from './socket'
+import './App.css'
 import { RoomSelect } from './components/RoomSelect'
 import { Room } from './components/Room'
+
+import { setPlayers } from './features/playersSlice'
+
+import { socket } from './socket'
 
 function App () {
   const currentRoom = useAppSelector(selectCurrentRoom)
   const gameStarted = useAppSelector(selectGameStarted)
+  const dispatch = useAppDispatch()
   // const newRoomRef = useRef()
 
-  // useEffect(() => {
+  useEffect(() => {
   //   socket.on('username_changed', (username) => {
   //     setUsername(username)
   //   })
 
-  //   socket.on('get_character_choices', (characters) => {
-  //     // receive two chars to pick from
-  //     setGameStarted(true)
-  //     setMyCharacterChoice(characters[username])
-  //   })
+    //   socket.on('get_character_choices', (characters) => {
+    //     // receive two chars to pick from
+    //     setGameStarted(true)
+    //     setMyCharacterChoice(characters[username])
+    //   })
 
-  //   socket.on('rooms', (rooms) => {
-  //     setRooms(rooms)
-  //   })
+    //   socket.on('rooms', (rooms) => {
+    //     setRooms(rooms)
+    //   })
 
-  //   socket.on('get_players', (users) => {
-  //     setUsers(users)
-  //   })
+    socket.on('get_players', (players) => {
+      console.log('got players ', players)
 
-  //   socket.on('get_messages', (messages) => {
-  //     setMessages(messages)
-  //   })
+      dispatch(setPlayers(players))
+    })
 
-  //   socket.on('console', consoleMessage => {
-  //     setConsoleOutput([...consoleOutput, ...consoleMessage])
-  //   })
+    //   socket.on('console', consoleMessage => {
+    //     setConsoleOutput([...consoleOutput, ...consoleMessage])
+    //   })
 
-  //   // GAME LOGIC
-  //   socket.on('game_started', data => {
-  //     setCharacterChoiceInProgress(false)
-  //     setGameStarted(true)
-  //     if (currentRoom !== null) {
-  //       socket.emit('get_my_role', { username, currentRoom })
-  //       socket.emit('get_my_hand', { username, currentRoom })
-  //     }
-  //     setAllPlayersInfo(data.allPlayersInfo) // info about health, hands...
-  //     setAllCharactersInfo(data.allCharactersInfo) // info about character names
-  //   })
+    //   // GAME LOGIC
+    //   socket.on('game_started', data => {
+    //     setCharacterChoiceInProgress(false)
+    //     setGameStarted(true)
+    //     if (currentRoom !== null) {
+    //       socket.emit('get_my_role', { username, currentRoom })
+    //       socket.emit('get_my_hand', { username, currentRoom })
+    //     }
+    //     setAllPlayersInfo(data.allPlayersInfo) // info about health, hands...
+    //     setAllCharactersInfo(data.allCharactersInfo) // info about character names
+    //   })
 
-  //   socket.on('characters', characters => {
-  //     for (const character of characters) {
-  //       if (character.playerName === username) {
-  //         setCharacter(character.character)
-  //         break
-  //       }
-  //     }
-  //   })
+    //   socket.on('characters', characters => {
+    //     for (const character of characters) {
+    //       if (character.playerName === username) {
+    //         setCharacter(character.character)
+    //         break
+    //       }
+    //     }
+    //   })
 
-  //   socket.on('known_roles', roles => {
-  //     // console.log("known roles: ", roles);
-  //     setKnownRoles(roles)
-  //   })
+    //   socket.on('known_roles', roles => {
+    //     // console.log("known roles: ", roles);
+    //     setKnownRoles(roles)
+    //   })
 
-  //   socket.on('my_hand', hand => {
-  //     setMyHand(hand)
-  //   })
+    //   socket.on('my_hand', hand => {
+    //     setMyHand(hand)
+    //   })
 
-  //   socket.on('my_draw_choice', hand => {
-  //     setMyDrawChoice(hand)
-  //   })
+    //   socket.on('my_draw_choice', hand => {
+    //     setMyDrawChoice(hand)
+    //   })
 
-  //   socket.on('update_hands', () => {
-  //     if (username === '') return
-  //     if (currentRoom === null) return
-  //     socket.emit('get_my_hand', { username, currentRoom })
-  //   })
+    //   socket.on('update_hands', () => {
+    //     if (username === '') return
+    //     if (currentRoom === null) return
+    //     socket.emit('get_my_hand', { username, currentRoom })
+    //   })
 
-  //   socket.on('update_all_players_info', (players) => {
-  //     // returns array [{name, numberOfCards, health}]
-  //     setAllPlayersInfo(players)
-  //   })
+    //   socket.on('update_all_players_info', (players) => {
+    //     // returns array [{name, numberOfCards, health}]
+    //     setAllPlayersInfo(players)
+    //   })
 
-  //   socket.on('emporio_state', (state) => {
-  //     setEmporioState(state.cards)
-  //     setNextEmporioTurn(state.nextEmporioTurn)
-  //   })
+    //   socket.on('emporio_state', (state) => {
+    //     setEmporioState(state.cards)
+    //     setNextEmporioTurn(state.nextEmporioTurn)
+    //   })
 
-  //   socket.on('game_ended', (winner) => {
-  //     setWinner(winner)
-  //   })
+    //   socket.on('game_ended', (winner) => {
+    //     setWinner(winner)
+    //   })
 
-  //   return () => {
-  //     socket.off('username_changed')
-  //     socket.off('get_character_choices')
-  //     socket.off('rooms')
-  //     socket.off('get_players')
-  //     socket.off('get_messages')
-  //     socket.off('console')
-  //     socket.off('game_started')
-  //     socket.off('characters')
-  //     socket.off('known_roles')
-  //     socket.off('my_hand')
-  //     socket.off('my_draw_choice')
-  //     socket.off('update_hands')
-  //     socket.off('update_all_players_info')
-  //     socket.off('emporio_state')
-  //     socket.off('game_ended')
-  //   }
+    return () => {
+      //     socket.off('username_changed')
+      //     socket.off('get_character_choices')
+      //     socket.off('rooms')
+      socket.off('get_players')
+
+      //     socket.off('console')
+      //     socket.off('game_started')
+      //     socket.off('characters')
+      //     socket.off('known_roles')
+      //     socket.off('my_hand')
+      //     socket.off('my_draw_choice')
+      //     socket.off('update_hands')
+      //     socket.off('update_all_players_info')
+      //     socket.off('emporio_state')
+      //     socket.off('game_ended')
+    }
+  }, [currentRoom])
   // }, [consoleOutput, currentRoom, username])
 
   // const leaveRoom = () => {
@@ -121,10 +123,6 @@ function App () {
   //   setAdmin(false)
   //   setGameStarted(false)
   //   setCurrentRoom(null)
-  // }
-
-  // const sendMessage = (message: string) => {
-  //   socket.emit('send_message', { currentRoom, username, message })
   // }
 
   // function startGame () {

@@ -1,17 +1,21 @@
 import { configureStore, type ThunkAction, type Action } from '@reduxjs/toolkit'
 import usernameReducer from '../features/usernameSlice'
-import adminReducer from '../features/adminSlice'
+import isAdminReducer from '../features/isAdminSlice'
 import roomsReducer from '../features/roomsSlice'
 import currentRoomReducer from '../features/currentRoomSlice'
 import gameStartedReducer from '../features/gameStartedSlice'
+import playersReducer from '../features/playersSlice'
+import messagesSlice from '../features/messagesSlice'
 
 export const store = configureStore({
   reducer: {
     username: usernameReducer,
-    admin: adminReducer,
+    isAdmin: isAdminReducer,
     rooms: roomsReducer,
     currentRoom: currentRoomReducer,
-    gameStarted: gameStartedReducer
+    gameStarted: gameStartedReducer,
+    players: playersReducer,
+    messages: messagesSlice
   }
 })
 
