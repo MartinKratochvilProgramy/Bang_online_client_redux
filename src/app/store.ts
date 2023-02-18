@@ -9,6 +9,8 @@ import messagesSlice from '../features/messagesSlice'
 import playerCharacterChoiceSlice from '../features/playerCharacterChoice'
 import characterChoiceInProgressSlice from '../features/characterChoiceInProgressSlice'
 import characterSlice from '../features/characterSlice'
+import allPlayersInfoSlice from '../features/allPlayersInfoSlice'
+import allCharactersInfoSlice from '../features/allCharactersInfoSlice'
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +23,9 @@ export const store = configureStore({
     messages: messagesSlice,
     playerCharacterChoice: playerCharacterChoiceSlice,
     characterChoiceInProgress: characterChoiceInProgressSlice,
-    character: characterSlice
+    character: characterSlice,
+    allPlayersInfo: allPlayersInfoSlice,
+    allCharactersInfo: allCharactersInfoSlice
   }
 })
 

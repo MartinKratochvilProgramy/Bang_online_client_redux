@@ -5,7 +5,10 @@ import { selectCurrentRoom } from './features/currentRoomSlice'
 import { useAppDispatch, useAppSelector } from './app/hooks'
 import { selectGameStarted, setGameStartedTrue } from './features/gameStartedSlice'
 import { setPlayerCharacterChoice } from './features/playerCharacterChoice'
-import { setCharacterChoiceInProgressTrue } from './features/characterChoiceInProgressSlice'
+import { setCharacterChoiceInProgressTrue, setCharacterChoiceInProgressFalse } from './features/characterChoiceInProgressSlice'
+import { setAllPlayersInfo } from './features/allPlayersInfoSlice'
+import { setAllCharactersInfo } from './features/allCharactersInfoSlice'
+import { setCharacter } from './features/characterSlice'
 import { setRooms } from './features/roomsSlice'
 // import { type User } from './types/user'
 // import { type Card } from './types/card'
@@ -30,7 +33,7 @@ function App () {
   //   })
 
     socket.on('get_character_choices', (characters) => {
-      // receive two chars to pick from
+      // receive two characters to pick from
       dispatch(setGameStartedTrue())
       if (username === null) return
       dispatch(setCharacterChoiceInProgressTrue())
@@ -42,35 +45,29 @@ function App () {
     })
 
     socket.on('get_players', (players) => {
-      console.log('got players ', players)
-
       dispatch(setPlayers(players))
     })
 
-    //   socket.on('console', consoleMessage => {
-    //     setConsoleOutput([...consoleOutput, ...consoleMessage])
-    //   })
+    // GAME LOGIC
+    socket.on('game_started', data => {
+      dispatch(setCharacterChoiceInProgressFalse())
+      // setGameStarted(true) ???
+      if (currentRoom !== null) {
+        socket.emit('get_my_role', { username, currentRoom })
+        socket.emit('get_my_hand', { username, currentRoom })
+      }
+      dispatch(setAllPlayersInfo(data.allPlayersInfo)) // info about health, hands...
+      dispatch(setAllCharactersInfo(data.allCharactersInfo)) // info about character names
+    })
 
-    //   // GAME LOGIC
-    //   socket.on('game_started', data => {
-    //     setCharacterChoiceInProgress(false)
-    //     setGameStarted(true)
-    //     if (currentRoom !== null) {
-    //       socket.emit('get_my_role', { username, currentRoom })
-    //       socket.emit('get_my_hand', { username, currentRoom })
-    //     }
-    //     setAllPlayersInfo(data.allPlayersInfo) // info about health, hands...
-    //     setAllCharactersInfo(data.allCharactersInfo) // info about character names
-    //   })
-
-    //   socket.on('characters', characters => {
-    //     for (const character of characters) {
-    //       if (character.playerName === username) {
-    //         setCharacter(character.character)
-    //         break
-    //       }
-    //     }
-    //   })
+    socket.on('characters', characters => {
+      for (const character of characters) {
+        if (character.playerName === username) {
+          dispatch(setCharacter(character.character))
+          break
+        }
+      }
+    })
 
     //   socket.on('known_roles', roles => {
     //     // console.log("known roles: ", roles);
@@ -110,9 +107,8 @@ function App () {
       socket.off('get_character_choices')
       socket.off('rooms')
       socket.off('get_players')
-      //     socket.off('console')
-      //     socket.off('game_started')
-      //     socket.off('characters')
+      socket.off('game_started')
+      socket.off('characters')
       //     socket.off('known_roles')
       //     socket.off('my_hand')
       //     socket.off('my_draw_choice')
@@ -152,8 +148,6 @@ function App () {
   //     socket.emit('get_choice_card_LD', { username, currentRoom, card })
   //   }
   // }
-
-  console.log(currentRoom, currentRoom == null)
 
   return (
     <div className="App flex flex-col justify-start items-center h-screen">

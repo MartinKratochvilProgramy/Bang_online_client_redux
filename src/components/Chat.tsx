@@ -24,8 +24,6 @@ export const Chat: React.FC<Props> = ({ width }) => {
   const dispatch = useAppDispatch()
 
   const sendMessage = () => {
-    console.log('send')
-
     socket.emit('send_message', { currentRoom, username, message: messageInput })
   }
 
@@ -42,8 +40,6 @@ export const Chat: React.FC<Props> = ({ width }) => {
 
   useEffect(() => {
     socket.on('get_messages', (messages: Message[]) => {
-      console.log(messages)
-
       dispatch(setMessages(messages))
     })
 
