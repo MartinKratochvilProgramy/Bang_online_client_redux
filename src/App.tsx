@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect } from 'react'
+import { selectUsername } from './features/usernameSlice'
 import { selectCurrentRoom } from './features/currentRoomSlice'
 import { useAppDispatch, useAppSelector } from './app/hooks'
-import { selectGameStarted } from './features/gameStartedSlice'
+import { selectGameStarted, setGameStartedTrue } from './features/gameStartedSlice'
+import { setPlayerCharacterChoice } from './features/playerCharacterChoice'
 import { setRooms } from './features/roomsSlice'
 // import { type User } from './types/user'
 // import { type Card } from './types/card'
@@ -17,19 +19,21 @@ import { socket } from './socket'
 function App () {
   const currentRoom = useAppSelector(selectCurrentRoom)
   const gameStarted = useAppSelector(selectGameStarted)
+  const username = useAppSelector(selectUsername)
+
   const dispatch = useAppDispatch()
-  // const newRoomRef = useRef()
 
   useEffect(() => {
   //   socket.on('username_changed', (username) => {
   //     setUsername(username)
   //   })
 
-    //   socket.on('get_character_choices', (characters) => {
-    //     // receive two chars to pick from
-    //     setGameStarted(true)
-    //     setMyCharacterChoice(characters[username])
-    //   })
+    socket.on('get_character_choices', (characters) => {
+      // receive two chars to pick from
+      dispatch(setGameStartedTrue())
+      if (username === null) return
+      dispatch(setPlayerCharacterChoice(characters[username]))
+    })
 
     socket.on('rooms', (rooms) => {
       dispatch(setRooms(rooms))
@@ -101,7 +105,7 @@ function App () {
 
     return () => {
       //     socket.off('username_changed')
-      //     socket.off('get_character_choices')
+      socket.off('get_character_choices')
       socket.off('rooms')
       socket.off('get_players')
       //     socket.off('console')
@@ -117,13 +121,6 @@ function App () {
     }
   }, [currentRoom])
   // }, [consoleOutput, currentRoom, username])
-
-  // function startGame () {
-  //   const players = users.map((user: User) => {
-  //     return user.username
-  //   })
-  //   socket.emit('start_game', { players, currentRoom })
-  // }
 
   // function getEmporioCard (card: Card) {
   //   if (username !== nextEmporioTurn) return

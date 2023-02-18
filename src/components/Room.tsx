@@ -23,7 +23,7 @@ export const Room = () => {
     const currentPlayers = players.map((player: Player) => {
       return player.username
     })
-    socket.emit('start_game', { currentPlayers, currentRoom })
+    socket.emit('start_game', { players: currentPlayers, currentRoom })
   }
 
   function leaveRoom () {

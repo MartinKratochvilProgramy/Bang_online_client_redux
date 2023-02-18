@@ -6,6 +6,7 @@ import currentRoomReducer from '../features/currentRoomSlice'
 import gameStartedReducer from '../features/gameStartedSlice'
 import playersReducer from '../features/playersSlice'
 import messagesSlice from '../features/messagesSlice'
+import playerCharacterChoiceSlice from '../features/playerCharacterChoice'
 
 export const store = configureStore({
   reducer: {
@@ -15,7 +16,8 @@ export const store = configureStore({
     currentRoom: currentRoomReducer,
     gameStarted: gameStartedReducer,
     players: playersReducer,
-    messages: messagesSlice
+    messages: messagesSlice,
+    playerCharacterChoice: playerCharacterChoiceSlice
   }
 })
 
