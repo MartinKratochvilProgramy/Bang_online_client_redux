@@ -7,6 +7,8 @@ import gameStartedReducer from '../features/gameStartedSlice'
 import playersReducer from '../features/playersSlice'
 import messagesSlice from '../features/messagesSlice'
 import playerCharacterChoiceSlice from '../features/playerCharacterChoice'
+import characterChoiceInProgressSlice from '../features/characterChoiceInProgressSlice'
+import characterSlice from '../features/characterSlice'
 
 export const store = configureStore({
   reducer: {
@@ -17,7 +19,9 @@ export const store = configureStore({
     gameStarted: gameStartedReducer,
     players: playersReducer,
     messages: messagesSlice,
-    playerCharacterChoice: playerCharacterChoiceSlice
+    playerCharacterChoice: playerCharacterChoiceSlice,
+    characterChoiceInProgress: characterChoiceInProgressSlice,
+    character: characterSlice
   }
 })
 

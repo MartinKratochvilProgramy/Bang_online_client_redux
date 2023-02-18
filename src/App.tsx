@@ -5,13 +5,14 @@ import { selectCurrentRoom } from './features/currentRoomSlice'
 import { useAppDispatch, useAppSelector } from './app/hooks'
 import { selectGameStarted, setGameStartedTrue } from './features/gameStartedSlice'
 import { setPlayerCharacterChoice } from './features/playerCharacterChoice'
+import { setCharacterChoiceInProgressTrue } from './features/characterChoiceInProgressSlice'
 import { setRooms } from './features/roomsSlice'
 // import { type User } from './types/user'
 // import { type Card } from './types/card'
 import './App.css'
 import { RoomSelect } from './components/RoomSelect'
 import { Room } from './components/Room'
-
+import { Game } from './components/Game'
 import { setPlayers } from './features/playersSlice'
 
 import { socket } from './socket'
@@ -32,6 +33,7 @@ function App () {
       // receive two chars to pick from
       dispatch(setGameStartedTrue())
       if (username === null) return
+      dispatch(setCharacterChoiceInProgressTrue())
       dispatch(setPlayerCharacterChoice(characters[username]))
     })
 
@@ -166,12 +168,10 @@ function App () {
         : !gameStarted &&
         <Room />
       }
-      {/* {gameStarted &&
+      {gameStarted &&
         <>
-          <Game
-
-          />
-          <div className='fixed flex justify-center items-center top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-[1100] m-auto'>
+          <Game />
+          {/* <div className='fixed flex justify-center items-center top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-[1100] m-auto'>
             {winner && <GameEnd winner={winner} setCurrentRoom={setCurrentRoom} />}
           </div>
           <div className='fixed flex justify-center items-center top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-[1000] m-auto'>
@@ -179,10 +179,10 @@ function App () {
           </div>
           <div className='fixed flex justify-center items-center top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-[1000] m-auto'>
             {emporioState.length > 0 && <EmporionChoice cards={emporioState} getEmporioCard={getEmporioCard} username={username} nextEmporioTurn={nextEmporioTurn} />}
-          </div>
+          </div> */}
 
         </>
-      } */}
+      }
     </div>
   )
 }
