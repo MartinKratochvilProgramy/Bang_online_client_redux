@@ -10,11 +10,26 @@ import { setNextTurnTrue, setNextTurnFalse } from '../features/nextTurnSlice'
 
 import { socket } from '../socket'
 import { type Card } from '../types/card'
-import { selectPlayersLosingHealth } from '../features/playersLosingHealthSlice'
+import { selectPlayersLosingHealth, setPlayersLosingHealth } from '../features/playersLosingHealthSlice'
+import { selectAllPlayersInfo } from '../features/allPlayersInfoSlice'
+import { selectUsername } from '../features/usernameSlice'
+import { setMyHealth } from '../features/myHealthSlice'
+import { selectPlayersActionRequiredOnStart } from '../features/playersActionRequiredOnStartSlice'
+import { setCharacterUsableFalse } from '../features/characterUsableSlice'
+import { setPlayersInRange } from '../features/playersInRangeSlice'
+import { selectCurrentRoom } from '../features/currentRoomSlice'
+import { setCurrentPlayer } from '../features/currentPlayerSlice'
+import { type PlayerLosingHealth } from '../types/playersLosingHealth'
+import { setIsLosingHealthFalse, setIsLosingHealthTrue } from '../features/isLosingHealthSlice'
 
 export const Game = () => {
+  const username = useAppSelector(selectUsername)
   const characterChoiceInProgress = useAppSelector(selectCharacterChoiceInProgress)
   const playersLosingHealth = useAppSelector(selectPlayersLosingHealth)
+  const allPlayersInfo = useAppSelector(selectAllPlayersInfo)
+  const playersActionRequiredOnStart = useAppSelector(selectPlayersActionRequiredOnStart)
+  const character = useAppSelector(selectUsername)
+  const currentRoom = useAppSelector(selectCurrentRoom)
 
   const dispatch = useAppDispatch()
 
@@ -28,27 +43,27 @@ export const Game = () => {
     }
   }, [playersLosingHealth])
 
-  //   useEffect(() => {
-  //     for (const player of allPlayersInfo) {
-  //       if (player.name === username) {
-  //         setMyHealth(player.health)
-  //       }
-  //     }
-  //   }, [allPlayersInfo, username])
+  useEffect(() => {
+    for (const player of allPlayersInfo) {
+      if (player.name === username) {
+        dispatch(setMyHealth(player.health))
+      }
+    }
+  }, [allPlayersInfo, username])
 
-  //   useEffect(() => {
-  //     setNextTurn(true)
-  //     // disable next turn button if dynamite, prison or action req from current player
-  //     for (const player of playersActionRequiredOnStart) {
-  //       if (player.name === username && (player.hasDynamite || player.isInPrison || player.actionRequired)) {
-  //         setNextTurn(false)
-  //         if (character !== 'Pedro Ramirez') {
-  //           setCharacterUsable(false)
-  //         }
-  //         break
-  //       }
-  //     }
-  //   }, [playersActionRequiredOnStart, username, setCharacterUsable, character])
+  useEffect(() => {
+    dispatch(setNextTurnTrue())
+    // disable next turn button if dynamite, prison or action req from current player
+    for (const player of playersActionRequiredOnStart) {
+      if (player.name === username && (player.hasDynamite || player.isInPrison || player.actionRequired)) {
+        dispatch(setNextTurnFalse())
+        if (character !== 'Pedro Ramirez') {
+          dispatch(setCharacterUsableFalse())
+        }
+        break
+      }
+    }
+  }, [playersActionRequiredOnStart, username, setCharacterUsableFalse, character])
 
   useEffect(() => {
     socket.on('known_roles', (roles: KnownRoles) => {
@@ -60,33 +75,33 @@ export const Game = () => {
       dispatch(setMyHand(hand))
     })
 
-    //     socket.on('players_in_range', players => {
-    //       setPlayersInRange(players)
-    //       console.log('Players in range')
-    //     })
+    socket.on('players_in_range', (players: string[]) => {
+      dispatch(setPlayersInRange(players))
+      console.log('Players in range')
+    })
 
-    //     socket.on('current_player', playerName => {
-    //       if (username === '') return
-    //       if (currentRoom === null) return
-    //       setCurrentPlayer(playerName)
-    //       socket.emit('get_my_hand', { username, currentRoom })
-    //     })
+    socket.on('current_player', (playerName: string) => {
+      if (username === '') return
+      if (currentRoom === null) return
+      dispatch(setCurrentPlayer(playerName))
+      socket.emit('get_my_hand', { username, currentRoom })
+    })
 
-    //     socket.on('update_players_losing_health', (players) => {
-    //       setPlayersLosingHealth(players)
+    socket.on('update_players_losing_health', (players: PlayerLosingHealth[]) => {
+      dispatch(setPlayersLosingHealth(players))
 
-    //       let playerFound = false
-    //       for (const player of players) {
-    //         if (player.name === username && player.isLosingHealth) {
-    //           playerFound = true
-    //         }
-    //       }
-    //       if (playerFound) {
-    //         setIsLosingHealth(true)
-    //       } else {
-    //         setIsLosingHealth(false)
-    //       }
-    //     })
+      let playerFound = false
+      for (const player of players) {
+        if (player.name === username && player.isLosingHealth) {
+          playerFound = true
+        }
+      }
+      if (playerFound) {
+        dispatch(setIsLosingHealthTrue())
+      } else {
+        dispatch(setIsLosingHealthFalse())
+      }
+    })
 
     //     socket.on('update_players_with_action_required', (players) => {
     //       setPlayersActionRequiredOnStart(players)
@@ -102,23 +117,6 @@ export const Game = () => {
 
     //     socket.on('update_top_stack_card', (card) => {
     //       setTopStackCard(card)
-    //     })
-
-    //     socket.on('update_draw_choices', (characterName) => {
-    //       if (username === '') return
-    //       if (currentRoom === null) return
-    //       if (characterName === character) {
-    //         if (characterName === 'Jesse Jones') {
-    //           setSelectPlayerTarget(true)
-    //           setDeckActive(true)
-    //           socket.emit('request_players_in_range', { range: 'max', currentRoom, username })
-    //         } else if (characterName === 'Pedro Ramirez') {
-    //           setDeckActive(true)
-    //           setCharacterUsable(true)
-    //         } else {
-    //           socket.emit('get_my_draw_choice', { username, currentRoom, character })
-    //         }
-    //       }
     //     })
 
     //     socket.on('end_discard', () => {
@@ -141,7 +139,7 @@ export const Game = () => {
       //       socket.off('indiani_active')
       //       socket.off('duel_active')
       //       socket.off('update_top_stack_card')
-      //       socket.off('update_draw_choices')
+
       //       socket.off('end_discard')
       //       socket.off('jourdonnais_can_use_barel')
     }
