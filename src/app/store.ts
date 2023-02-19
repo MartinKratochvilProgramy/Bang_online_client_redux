@@ -11,6 +11,24 @@ import characterChoiceInProgressSlice from '../features/characterChoiceInProgres
 import characterSlice from '../features/characterSlice'
 import allPlayersInfoSlice from '../features/allPlayersInfoSlice'
 import allCharactersInfoSlice from '../features/allCharactersInfoSlice'
+import knownRolesSlice from '../features/knownRolesSlice'
+import myHandSlice from '../features/myHandSlice'
+import myDrawChoiceSlice from '../features/myDrawChoice'
+import nextEmporioTurnSlice from '../features/nextEmporioTurnSlice'
+import emporioStateSlice from '../features/emporioStateSlice'
+import nextTurnSlice from '../features/nextTurnSlice'
+import playersLosingHealthSlice from '../features/playersLosingHealthSlice'
+import myHealthSlice from '../features/myHealthSlice'
+import characterUsableSlice from '../features/characterUsableSlice'
+import playersInRangeSlice from '../features/playersInRangeSlice'
+import currentPlayerSlice from '../features/currentPlayerSlice'
+import playersActionRequiredOnStartSlice from '../features/playersActionRequiredOnStartSlice'
+import duelActiveSlice from '../features/duelActiveSlice'
+import indianiActiveSlice from '../features/indianiActiveSlice'
+import topStackCardSlice from '../features/topStackCardSlice'
+import selectPlayerTargetSlice from '../features/selectPlayerTargetSlice'
+import deckActiveSlice from '../features/deckActiveSlice'
+import discardingSlice from '../features/discardingSlice'
 
 export const store = configureStore({
   reducer: {
@@ -25,7 +43,25 @@ export const store = configureStore({
     characterChoiceInProgress: characterChoiceInProgressSlice,
     character: characterSlice,
     allPlayersInfo: allPlayersInfoSlice,
-    allCharactersInfo: allCharactersInfoSlice
+    allCharactersInfo: allCharactersInfoSlice,
+    knownRoles: knownRolesSlice,
+    myHand: myHandSlice,
+    myDrawChoice: myDrawChoiceSlice,
+    nextEmporioTurn: nextEmporioTurnSlice,
+    emporioState: emporioStateSlice,
+    nextTurn: nextTurnSlice,
+    playersLosingHealth: playersLosingHealthSlice,
+    myHealth: myHealthSlice,
+    characterUsable: characterUsableSlice,
+    playersInRange: playersInRangeSlice,
+    currentPlayer: currentPlayerSlice,
+    playersActionRequiredOnStart: playersActionRequiredOnStartSlice,
+    duelActive: duelActiveSlice,
+    indianiActive: indianiActiveSlice,
+    topStackCard: topStackCardSlice,
+    selectPlayerTarget: selectPlayerTargetSlice,
+    deckActive: deckActiveSlice,
+    discarding: discardingSlice
   }
 })
 

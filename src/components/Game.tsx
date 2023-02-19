@@ -1,23 +1,32 @@
-import React from 'react'
-import { useAppSelector } from '../app/hooks'
+import React, { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { selectCharacterChoiceInProgress } from '../features/characterChoiceInProgressSlice'
 import { CharacterChoice } from './CharacterChoice'
 import { Chat } from './Chat'
+import { type KnownRoles } from '../types/knownRoles'
+import { setKnownRoles } from '../features/knownRolesSlice'
+import { setMyHand } from '../features/myHandSlice'
+import { setNextTurnTrue, setNextTurnFalse } from '../features/nextTurnSlice'
 
-// import { socket } from '../socket'
+import { socket } from '../socket'
+import { type Card } from '../types/card'
+import { selectPlayersLosingHealth } from '../features/playersLosingHealthSlice'
 
 export const Game = () => {
   const characterChoiceInProgress = useAppSelector(selectCharacterChoiceInProgress)
+  const playersLosingHealth = useAppSelector(selectPlayersLosingHealth)
 
-  //   useEffect(() => {
-  //     setNextTurn(true)
-  //     // disable next turn button if health decision req on other players
-  //     for (const player of playersLosingHealth) {
-  //       if (player.isLosingHealth) {
-  //         setNextTurn(false)
-  //       }
-  //     }
-  //   }, [playersLosingHealth])
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(setNextTurnTrue())
+    // disable next turn button if health decision req on other players
+    for (const player of playersLosingHealth) {
+      if (player.isLosingHealth) {
+        dispatch(setNextTurnFalse())
+      }
+    }
+  }, [playersLosingHealth])
 
   //   useEffect(() => {
   //     for (const player of allPlayersInfo) {
@@ -41,91 +50,103 @@ export const Game = () => {
   //     }
   //   }, [playersActionRequiredOnStart, username, setCharacterUsable, character])
 
-  //   useEffect(() => {
-  //     socket.on('players_in_range', players => {
-  //       setPlayersInRange(players)
-  //       console.log('Players in range')
-  //     })
+  useEffect(() => {
+    socket.on('known_roles', (roles: KnownRoles) => {
+      console.log('known roles: ', roles)
+      dispatch(setKnownRoles(roles))
+    })
 
-  //     socket.on('current_player', playerName => {
-  //       if (username === '') return
-  //       if (currentRoom === null) return
-  //       setCurrentPlayer(playerName)
-  //       socket.emit('get_my_hand', { username, currentRoom })
-  //     })
+    socket.on('my_hand', (hand: Card[]) => {
+      dispatch(setMyHand(hand))
+    })
 
-  //     socket.on('update_players_losing_health', (players) => {
-  //       setPlayersLosingHealth(players)
+    //     socket.on('players_in_range', players => {
+    //       setPlayersInRange(players)
+    //       console.log('Players in range')
+    //     })
 
-  //       let playerFound = false
-  //       for (const player of players) {
-  //         if (player.name === username && player.isLosingHealth) {
-  //           playerFound = true
-  //         }
-  //       }
-  //       if (playerFound) {
-  //         setIsLosingHealth(true)
-  //       } else {
-  //         setIsLosingHealth(false)
-  //       }
-  //     })
+    //     socket.on('current_player', playerName => {
+    //       if (username === '') return
+    //       if (currentRoom === null) return
+    //       setCurrentPlayer(playerName)
+    //       socket.emit('get_my_hand', { username, currentRoom })
+    //     })
 
-  //     socket.on('update_players_with_action_required', (players) => {
-  //       setPlayersActionRequiredOnStart(players)
-  //     })
+    //     socket.on('update_players_losing_health', (players) => {
+    //       setPlayersLosingHealth(players)
 
-  //     socket.on('indiani_active', (state) => {
-  //       setIndianiActive(state)
-  //     })
+    //       let playerFound = false
+    //       for (const player of players) {
+    //         if (player.name === username && player.isLosingHealth) {
+    //           playerFound = true
+    //         }
+    //       }
+    //       if (playerFound) {
+    //         setIsLosingHealth(true)
+    //       } else {
+    //         setIsLosingHealth(false)
+    //       }
+    //     })
 
-  //     socket.on('duel_active', (state) => {
-  //       setDuelActive(state)
-  //     })
+    //     socket.on('update_players_with_action_required', (players) => {
+    //       setPlayersActionRequiredOnStart(players)
+    //     })
 
-  //     socket.on('update_top_stack_card', (card) => {
-  //       setTopStackCard(card)
-  //     })
+    //     socket.on('indiani_active', (state) => {
+    //       setIndianiActive(state)
+    //     })
 
-  //     socket.on('update_draw_choices', (characterName) => {
-  //       if (username === '') return
-  //       if (currentRoom === null) return
-  //       if (characterName === character) {
-  //         if (characterName === 'Jesse Jones') {
-  //           setSelectPlayerTarget(true)
-  //           setDeckActive(true)
-  //           socket.emit('request_players_in_range', { range: 'max', currentRoom, username })
-  //         } else if (characterName === 'Pedro Ramirez') {
-  //           setDeckActive(true)
-  //           setCharacterUsable(true)
-  //         } else {
-  //           socket.emit('get_my_draw_choice', { username, currentRoom, character })
-  //         }
-  //       }
-  //     })
+    //     socket.on('duel_active', (state) => {
+    //       setDuelActive(state)
+    //     })
 
-  //     socket.on('end_discard', () => {
-  //       setDiscarding(false)
-  //     })
+    //     socket.on('update_top_stack_card', (card) => {
+    //       setTopStackCard(card)
+    //     })
 
-  //     socket.on('jourdonnais_can_use_barel', () => {
-  //       if (character === 'Jourdonnais') {
-  //         setCharacterUsable(true)
-  //       }
-  //     })
+    //     socket.on('update_draw_choices', (characterName) => {
+    //       if (username === '') return
+    //       if (currentRoom === null) return
+    //       if (characterName === character) {
+    //         if (characterName === 'Jesse Jones') {
+    //           setSelectPlayerTarget(true)
+    //           setDeckActive(true)
+    //           socket.emit('request_players_in_range', { range: 'max', currentRoom, username })
+    //         } else if (characterName === 'Pedro Ramirez') {
+    //           setDeckActive(true)
+    //           setCharacterUsable(true)
+    //         } else {
+    //           socket.emit('get_my_draw_choice', { username, currentRoom, character })
+    //         }
+    //       }
+    //     })
 
-  //     return () => {
-  //       socket.off('players_in_range')
-  //       socket.off('current_player')
-  //       socket.off('update_players_losing_health')
-  //       socket.off('update_players_with_action_required')
-  //       socket.off('indiani_active')
-  //       socket.off('duel_active')
-  //       socket.off('update_top_stack_card')
-  //       socket.off('update_draw_choices')
-  //       socket.off('end_discard')
-  //       socket.off('jourdonnais_can_use_barel')
-  //     }
+    //     socket.on('end_discard', () => {
+    //       setDiscarding(false)
+    //     })
+
+    //     socket.on('jourdonnais_can_use_barel', () => {
+    //       if (character === 'Jourdonnais') {
+    //         setCharacterUsable(true)
+    //       }
+    //     })
+
+    return () => {
+      socket.off('my_hand')
+      socket.off('known_roles')
+      //       socket.off('players_in_range')
+      //       socket.off('current_player')
+      //       socket.off('update_players_losing_health')
+      //       socket.off('update_players_with_action_required')
+      //       socket.off('indiani_active')
+      //       socket.off('duel_active')
+      //       socket.off('update_top_stack_card')
+      //       socket.off('update_draw_choices')
+      //       socket.off('end_discard')
+      //       socket.off('jourdonnais_can_use_barel')
+    }
   //   }, [character, currentRoom, setCharacterUsable, username])
+  }, [])
 
   //   function confirmPlayerTarget (target) {
   //     if (!selectPlayerTarget) return

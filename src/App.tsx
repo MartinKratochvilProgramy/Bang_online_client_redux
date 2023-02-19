@@ -8,8 +8,11 @@ import { setPlayerCharacterChoice } from './features/playerCharacterChoice'
 import { setCharacterChoiceInProgressTrue, setCharacterChoiceInProgressFalse } from './features/characterChoiceInProgressSlice'
 import { setAllPlayersInfo } from './features/allPlayersInfoSlice'
 import { setAllCharactersInfo } from './features/allCharactersInfoSlice'
+import { setMyDrawChoice } from './features/myDrawChoice'
 import { setCharacter } from './features/characterSlice'
 import { setRooms } from './features/roomsSlice'
+import { setNextEmporioTurn } from './features/nextEmporioTurnSlice'
+import { setEmporioState } from './features/emporioStateSlice'
 // import { type User } from './types/user'
 // import { type Card } from './types/card'
 import './App.css'
@@ -69,34 +72,25 @@ function App () {
       }
     })
 
-    //   socket.on('known_roles', roles => {
-    //     // console.log("known roles: ", roles);
-    //     setKnownRoles(roles)
-    //   })
+    socket.on('my_draw_choice', hand => {
+      dispatch(setMyDrawChoice(hand))
+    })
 
-    //   socket.on('my_hand', hand => {
-    //     setMyHand(hand)
-    //   })
+    socket.on('update_hands', () => {
+      if (username === '') return
+      if (currentRoom === null) return
+      socket.emit('get_my_hand', { username, currentRoom })
+    })
 
-    //   socket.on('my_draw_choice', hand => {
-    //     setMyDrawChoice(hand)
-    //   })
+    socket.on('update_all_players_info', (players) => {
+      // returns array [{name, numberOfCards, health}]
+      dispatch(setAllPlayersInfo(players))
+    })
 
-    //   socket.on('update_hands', () => {
-    //     if (username === '') return
-    //     if (currentRoom === null) return
-    //     socket.emit('get_my_hand', { username, currentRoom })
-    //   })
-
-    //   socket.on('update_all_players_info', (players) => {
-    //     // returns array [{name, numberOfCards, health}]
-    //     setAllPlayersInfo(players)
-    //   })
-
-    //   socket.on('emporio_state', (state) => {
-    //     setEmporioState(state.cards)
-    //     setNextEmporioTurn(state.nextEmporioTurn)
-    //   })
+    socket.on('emporio_state', (state) => {
+      dispatch(setEmporioState(state.cards))
+      dispatch(setNextEmporioTurn(state.nextEmporioTurn))
+    })
 
     //   socket.on('game_ended', (winner) => {
     //     setWinner(winner)
@@ -109,15 +103,13 @@ function App () {
       socket.off('get_players')
       socket.off('game_started')
       socket.off('characters')
-      //     socket.off('known_roles')
-      //     socket.off('my_hand')
-      //     socket.off('my_draw_choice')
-      //     socket.off('update_hands')
-      //     socket.off('update_all_players_info')
-      //     socket.off('emporio_state')
+      socket.off('my_draw_choice')
+      socket.off('update_hands')
+      socket.off('update_all_players_info')
+      socket.off('emporio_state')
       //     socket.off('game_ended')
     }
-  }, [currentRoom])
+  }, [currentRoom, username])
   // }, [consoleOutput, currentRoom, username])
 
   // function getEmporioCard (card: Card) {
