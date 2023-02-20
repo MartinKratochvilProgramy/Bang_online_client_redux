@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '../app/store'
-import { type Card } from '../types/card'
+import { type CardI } from '../types/card'
 
 export interface MyHandSlice {
-  value: Card[]
+  value: CardI[]
 }
 
 const initialState: MyHandSlice = {
@@ -14,13 +14,23 @@ export const myHandSlice = createSlice({
   name: 'myHand',
   initialState,
   reducers: {
-    setMyHand: (state, action: PayloadAction<Card[]>) => {
+    setMyHand: (state, action: PayloadAction<CardI[]>) => {
       state.value = action.payload
+    },
+    setMyHandNotPlayable: (state) => {
+      const newMyHand = [...state.value]
+
+      for (let i = 0; i < newMyHand.length; i++) {
+        const card = newMyHand[i]
+        card.isPlayable = false
+      }
+
+      state.value = newMyHand
     }
   }
 })
 
-export const { setMyHand } = myHandSlice.actions
+export const { setMyHand, setMyHandNotPlayable } = myHandSlice.actions
 
 export const selectMyHand = (state: RootState) => state.myHand.value
 

@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '../app/store'
-import { type Card } from '../types/card'
+import { type CardI } from '../types/card'
 
 export interface EmporioStateSlice {
-  value: Card[]
+  value: CardI[]
 }
 
 const initialState: EmporioStateSlice = {
@@ -14,7 +14,7 @@ export const emporioStateSlice = createSlice({
   name: 'emporioState',
   initialState,
   reducers: {
-    setEmporioState: (state, action: PayloadAction<Card[]>) => {
+    setEmporioState: (state, action: PayloadAction<CardI[]>) => {
       state.value = action.payload
     }
   }

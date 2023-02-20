@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '../app/store'
-import { type Card } from '../types/card'
+import { type CardI } from '../types/card'
 
 export interface TopStackCardSlice {
-  value: Card | null
+  value: CardI | null
 }
 
 const initialState: TopStackCardSlice = {
@@ -14,7 +14,7 @@ export const topStackCardSlice = createSlice({
   name: 'topStackCard',
   initialState,
   reducers: {
-    setTopStackCard: (state, action: PayloadAction<Card>) => {
+    setTopStackCard: (state, action: PayloadAction<CardI>) => {
       state.value = action.payload
     }
   }

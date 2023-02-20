@@ -5,22 +5,30 @@ import { CharacterChoice } from './CharacterChoice'
 import { Chat } from './Chat'
 import { type KnownRoles } from '../types/knownRoles'
 import { setKnownRoles } from '../features/knownRolesSlice'
-import { setMyHand } from '../features/myHandSlice'
+import { selectMyHand, setMyHand } from '../features/myHandSlice'
 import { setNextTurnTrue, setNextTurnFalse } from '../features/nextTurnSlice'
 
 import { socket } from '../socket'
-import { type Card } from '../types/card'
+import { type CardI } from '../types/card'
 import { selectPlayersLosingHealth, setPlayersLosingHealth } from '../features/playersLosingHealthSlice'
 import { selectAllPlayersInfo } from '../features/allPlayersInfoSlice'
 import { selectUsername } from '../features/usernameSlice'
 import { setMyHealth } from '../features/myHealthSlice'
-import { selectPlayersActionRequiredOnStart } from '../features/playersActionRequiredOnStartSlice'
+import { selectPlayersActionRequiredOnStart, setPlayersActionRequiredOnStart } from '../features/playersActionRequiredOnStartSlice'
 import { setCharacterUsableFalse } from '../features/characterUsableSlice'
 import { setPlayersInRange } from '../features/playersInRangeSlice'
 import { selectCurrentRoom } from '../features/currentRoomSlice'
 import { setCurrentPlayer } from '../features/currentPlayerSlice'
 import { type PlayerLosingHealth } from '../types/playersLosingHealth'
 import { setIsLosingHealthFalse, setIsLosingHealthTrue } from '../features/isLosingHealthSlice'
+import { type PlayerActionRequiredOnStart } from '../types/playerActionRequiredOnStart'
+import { setIndianiActiveTrue } from '../features/indianiActiveSlice'
+import { setDuelActiveFalse, setDuelActiveTrue } from '../features/duelActiveSlice'
+import { selectSelectCardTarget, setSelectCardTargetFalse } from '../features/selectCardTargetSlice'
+import { setSelectPlayerTargetFalse } from '../features/selectPlayerTargetSlice'
+import { selectActiveCard, setActiveCard } from '../features/activeCardSlice'
+import { setTopStackCard } from '../features/topStackCardSlice'
+import { PlayerTable } from './PlayerTable'
 
 export const Game = () => {
   const username = useAppSelector(selectUsername)
@@ -30,6 +38,9 @@ export const Game = () => {
   const playersActionRequiredOnStart = useAppSelector(selectPlayersActionRequiredOnStart)
   const character = useAppSelector(selectUsername)
   const currentRoom = useAppSelector(selectCurrentRoom)
+  const selectCardTarget = useAppSelector(selectSelectCardTarget)
+  const activeCard = useAppSelector(selectActiveCard)
+  const myHand = useAppSelector(selectMyHand)
 
   const dispatch = useAppDispatch()
 
@@ -71,7 +82,7 @@ export const Game = () => {
       dispatch(setKnownRoles(roles))
     })
 
-    socket.on('my_hand', (hand: Card[]) => {
+    socket.on('my_hand', (hand: CardI[]) => {
       dispatch(setMyHand(hand))
     })
 
@@ -103,17 +114,25 @@ export const Game = () => {
       }
     })
 
-    //     socket.on('update_players_with_action_required', (players) => {
-    //       setPlayersActionRequiredOnStart(players)
-    //     })
+    socket.on('update_players_with_action_required', (players: PlayerActionRequiredOnStart[]) => {
+      dispatch(setPlayersActionRequiredOnStart(players))
+    })
 
-    //     socket.on('indiani_active', (state) => {
-    //       setIndianiActive(state)
-    //     })
+    socket.on('indiani_active', (state: boolean) => {
+      if (state) {
+        dispatch(setIndianiActiveTrue())
+      } else {
+        dispatch(setIndianiActiveTrue())
+      }
+    })
 
-    //     socket.on('duel_active', (state) => {
-    //       setDuelActive(state)
-    //     })
+    socket.on('duel_active', (state: boolean) => {
+      if (state) {
+        dispatch(setDuelActiveTrue())
+      } else {
+        dispatch(setDuelActiveFalse())
+      }
+    })
 
     //     socket.on('update_top_stack_card', (card) => {
     //       setTopStackCard(card)
@@ -182,67 +201,30 @@ export const Game = () => {
   //     setActiveCard({})
   //   }
 
-  //   function confirmCardTarget (cardName, cardDigit, cardType) {
-  //     if (!selectCardTarget) return
-  //     setSelectPlayerTarget(false)
-  //     setSelectCardTarget(false)
-  //     if (activeCard.name === 'Cat Balou') {
-  //       socket.emit('play_cat_ballou_on_table_card', { activeCard, username, target: cardName, currentRoom, cardDigit, cardType })
-  //     } else if (activeCard.name === 'Panico') {
-  //       socket.emit('play_panico_on_table_card', { activeCard, username, target: cardName, currentRoom, cardDigit, cardType })
-  //     }
-  //     predictUseCard(cardName, cardDigit, cardType)
-  //     setActiveCard({})
-  //   }
+  function predictUseCard (cardName: string, cardDigit: number, cardType: string) {
+    // place card on stack
+    dispatch(setTopStackCard({ name: cardName, digit: cardDigit, type: cardType, isPlayable: false }))
+    // splice card from my hand
+    const newMyHand = [...myHand]
+    const cardIndex = myHand.findIndex(card => (card.name === cardName && card.digit === cardDigit && card.type === cardType))
+    newMyHand.splice(cardIndex, 1)
 
-  //   function activateCharacter () {
-  //     if (!characterUsable && character !== 'Sid Ketchum') return
+    dispatch(setMyHand(newMyHand))
+  }
 
-  //     if (character === 'Jourdonnais') {
-  //       setCharacterUsable(false)
-  //       socket.emit('jourdonnais_barel', { currentRoom, username })
-  //     }
-
-  //     if (character === 'Pedro Ramirez') {
-  //       setCharacterUsable(false)
-  //       setSelectPlayerTarget(false)
-  //       setDeckActive(false)
-  //       setNextTurn(true)
-  //       socket.emit('get_stack_card_PR', { currentRoom, username })
-  //     }
-
-  //     if (character === 'Sid Ketchum') {
-  //       setDiscarding(true)
-  //     }
-  //   }
-
-  //   function drawFromDeck () {
-  //     socket.emit('draw_from_deck', { currentRoom, username })
-  //     setCharacterUsable(false)
-  //     setSelectPlayerTarget(false)
-  //     setDeckActive(false)
-  //     setNextTurn(true)
-  //   }
-
-  //   function predictUseCard (cardName, cardDigit, cardType) {
-  //     // place card on stack
-  //     setTopStackCard({ name: cardName, digit: cardDigit, type: cardType })
-  //     // splice card from my hand
-  //     const newMyHand = myHand
-  //     const cardIndex = myHand.findIndex(card => (card.name === cardName && card.digit === cardDigit && card.type === cardType))
-  //     newMyHand.splice(cardIndex, 1)
-
-  //     setMyHand(newMyHand)
-  //   }
-
-  //   function predictUseBlueCard (cardName, cardDigit, cardType) {
-  //     // splice card from my hand
-  //     const newMyHand = myHand
-  //     const cardIndex = myHand.findIndex(card => (card.name === cardName && card.digit === cardDigit && card.type === cardType))
-  //     newMyHand.splice(cardIndex, 1)
-
-  //     setMyHand(newMyHand)
-  //   }
+  function confirmCardTarget (cardName: string, cardDigit: number, cardType: string) {
+    if (!selectCardTarget) return
+    dispatch(setSelectPlayerTargetFalse())
+    dispatch(setSelectCardTargetFalse())
+    if (activeCard === null) return
+    if (activeCard.name === 'Cat Balou') {
+      socket.emit('play_cat_ballou_on_table_card', { activeCard, username, target: cardName, currentRoom, cardDigit, cardType })
+    } else if (activeCard.name === 'Panico') {
+      socket.emit('play_panico_on_table_card', { activeCard, username, target: cardName, currentRoom, cardDigit, cardType })
+    }
+    predictUseCard(cardName, cardDigit, cardType)
+    dispatch(setActiveCard(null))
+  }
 
   //   function setAllNotPlayable () {
   //     const newMyHand = myHand
@@ -262,7 +244,7 @@ export const Game = () => {
           <Chat width={260} />
         </div>
         : <>
-          {/* <div id='oponents' className='fixed z-[30]'>
+          <div id='oponents' className='fixed z-[30]'>
             <Oponents />
 
           </div>
@@ -273,9 +255,12 @@ export const Game = () => {
 
           <div className='fixed flex justify-between items-end bottom-0 left-0 right-0 z-[50]'>
             <Chat sendMessage={sendMessage} messages={messages} width={260} />
-            <PlayerTable />
+            <PlayerTable
+              predictUseCard={predictUseCard}
+              confirmCardTarget={confirmCardTarget}
+            />
             <Console consoleOutput={consoleOutput} />
-          </div> */}
+          </div>
         </>
       }
     </div>

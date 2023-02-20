@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '../app/store'
-import { type Card } from '../types/card'
+import { type CardI } from '../types/card'
 
 export interface MyDrawChoiceSlice {
-  value: Card[]
+  value: CardI[]
 }
 
 const initialState: MyDrawChoiceSlice = {
@@ -14,7 +14,7 @@ export const myDrawChoiceSlice = createSlice({
   name: 'myDrawChoice',
   initialState,
   reducers: {
-    setMyDrawChoice: (state, action: PayloadAction<Card[]>) => {
+    setMyDrawChoice: (state, action: PayloadAction<CardI[]>) => {
       state.value = action.payload
     }
   }
@@ -22,6 +22,6 @@ export const myDrawChoiceSlice = createSlice({
 
 export const { setMyDrawChoice } = myDrawChoiceSlice.actions
 
-export const selectMyHand = (state: RootState) => state.myDrawChoice.value
+export const selectMyDrawChoice = (state: RootState) => state.myDrawChoice.value
 
 export default myDrawChoiceSlice.reducer

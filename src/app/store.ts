@@ -30,6 +30,8 @@ import selectPlayerTargetSlice from '../features/selectPlayerTargetSlice'
 import deckActiveSlice from '../features/deckActiveSlice'
 import discardingSlice from '../features/discardingSlice'
 import isLosingHealthSlice from '../features/isLosingHealthSlice'
+import selectCardTargetSlice from '../features/selectCardTargetSlice'
+import activeCardSlice from '../features/activeCardSlice'
 
 export const store = configureStore({
   reducer: {
@@ -63,7 +65,9 @@ export const store = configureStore({
     selectPlayerTarget: selectPlayerTargetSlice,
     deckActive: deckActiveSlice,
     discarding: discardingSlice,
-    isLosingHealth: isLosingHealthSlice
+    isLosingHealth: isLosingHealthSlice,
+    selectCardTarget: selectCardTargetSlice,
+    activeCard: activeCardSlice
   }
 })
 

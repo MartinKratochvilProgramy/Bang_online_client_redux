@@ -9,7 +9,7 @@ const initialState: SelectPlayerTargetSlice = {
   value: true
 }
 
-export const selectPlayerTargetSlice = createSlice({
+export const selectPlayerTarget = createSlice({
   name: 'selectPlayerTarget',
   initialState,
   reducers: {
@@ -22,8 +22,8 @@ export const selectPlayerTargetSlice = createSlice({
   }
 })
 
-export const { setSelectPlayerTargetTrue, setSelectPlayerTargetFalse } = selectPlayerTargetSlice.actions
+export const { setSelectPlayerTargetTrue, setSelectPlayerTargetFalse } = selectPlayerTarget.actions
 
 export const selectSelectPlayerTarget = (state: RootState) => state.selectPlayerTarget.value
 
-export default selectPlayerTargetSlice.reducer
+export default selectPlayerTarget.reducer

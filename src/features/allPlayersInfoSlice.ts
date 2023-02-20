@@ -1,12 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '../app/store'
-import { type Card } from '../types/card'
+import { type CardI } from '../types/card'
 
 interface PlayerInfo {
   name: string
   numberOfCards: number
   health: number
-  table: Card[]
+  table: CardI[]
 }
 
 export interface AllPlayersInfo {
