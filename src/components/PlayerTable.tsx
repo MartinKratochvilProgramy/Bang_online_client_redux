@@ -8,7 +8,7 @@ import { selectCurrentRoom } from '../features/currentRoomSlice'
 import { setDeckActiveFalse, setDeckActiveTrue } from '../features/deckActiveSlice'
 import { selectDiscarding, setDiscardingFalse, setDiscardingTrue } from '../features/discardingSlice'
 import { selectIsLosingHealth, setIsLosingHealthFalse } from '../features/isLosingHealthSlice'
-import { selectMyHand, setMyHand, setMyHandNotPlayable } from '../features/myHandSlice'
+import { selectMyHand, setMyHand, setMyHandNotPlayable, setMyHandPlayable } from '../features/myHandSlice'
 import { selectMyHealth } from '../features/myHealthSlice'
 import { selectNextTurn, setNextTurnTrue } from '../features/nextTurnSlice'
 import { setSelectCardTargetFalse } from '../features/selectCardTargetSlice'
@@ -105,6 +105,7 @@ export const PlayerTable: React.FC<Props> = ({ predictUseCard, confirmCardTarget
 
     if (myHand.length > myHealth) {
       dispatch(setDiscardingTrue())
+      dispatch(setMyHandPlayable())
     } else {
       dispatch(setMyHandNotPlayable())
       dispatch(setDiscardingFalse())

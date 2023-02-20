@@ -1,6 +1,5 @@
 import React from 'react'
 import { useAppSelector } from '../app/hooks'
-import { selectCharacter } from '../features/characterSlice'
 import { selectCurrentPlayer } from '../features/currentPlayerSlice'
 import { selectPlayersInRange } from '../features/playersInRangeSlice'
 import { selectSelectPlayerTarget } from '../features/selectPlayerTargetSlice'
@@ -11,6 +10,7 @@ import { OponentCardOnTable } from './OponentCardOnTable'
 interface Props {
   oponentName: string
   health: number
+  character: string
   table: CardI[]
   cardsInHand: number[]
   largeMagicConstant: number
@@ -24,6 +24,7 @@ interface Props {
 export const TopPlayerTable: React.FC<Props> = ({
   oponentName,
   health,
+  character,
   table,
   cardsInHand,
   largeMagicConstant,
@@ -33,7 +34,6 @@ export const TopPlayerTable: React.FC<Props> = ({
   confirmPlayerTarget,
   role
 }) => {
-  const character = useAppSelector(selectCharacter)
   const playersInRange = useAppSelector(selectPlayersInRange)
   const currentPlayer = useAppSelector(selectCurrentPlayer)
   const selectPlayerTarget = useAppSelector(selectSelectPlayerTarget)

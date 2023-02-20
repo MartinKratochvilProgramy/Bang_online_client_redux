@@ -26,11 +26,21 @@ export const myHandSlice = createSlice({
       }
 
       state.value = newMyHand
+    },
+    setMyHandPlayable: (state) => {
+      const newMyHand = [...state.value]
+
+      for (let i = 0; i < newMyHand.length; i++) {
+        const card = newMyHand[i]
+        card.isPlayable = true
+      }
+
+      state.value = newMyHand
     }
   }
 })
 
-export const { setMyHand, setMyHandNotPlayable } = myHandSlice.actions
+export const { setMyHand, setMyHandNotPlayable, setMyHandPlayable } = myHandSlice.actions
 
 export const selectMyHand = (state: RootState) => state.myHand.value
 

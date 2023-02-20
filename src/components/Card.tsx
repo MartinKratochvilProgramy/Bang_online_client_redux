@@ -156,9 +156,9 @@ export const Card: React.FC<Props> = ({ card, predictUseCard, predictUseBlueCard
   if (isPlayable) {
     styles = { color: 'red', border: 'solid 2px red', cursor: 'pointer' }
   }
-  if (discarding) {
-    styles = { color: 'red', border: 'solid 2px red', cursor: 'pointer' }
-  }
+  // if (discarding) {
+  //   styles = { color: 'red', border: 'solid 2px red', cursor: 'pointer' }
+  // }
 
   if (cardName === undefined) return null
 

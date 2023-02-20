@@ -55,7 +55,6 @@ export const StackDeck = () => {
 
   return (
     <div className='flex space-x-4'>
-
       {topStackCard !== null &&
         <Card
           card={topStackCard}

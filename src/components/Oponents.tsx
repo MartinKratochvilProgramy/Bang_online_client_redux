@@ -1,7 +1,8 @@
 import React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { selectActiveCard, setActiveCard } from '../features/activeCardSlice'
-// import { type CharacterInfo, selectAllCharactersInfo } from '../features/allCharactersInfoSlice'
+import { type CharacterInfo, selectAllCharactersInfo } from '../features/allCharactersInfoSlice'
+
 import { type PlayerInfo, selectAllPlayersInfo } from '../features/allPlayersInfoSlice'
 import { selectCharacter } from '../features/characterSlice'
 import { setCharacterUsableFalse } from '../features/characterUsableSlice'
@@ -24,7 +25,7 @@ interface Props {
 export const Oponents: React.FC<Props> = ({ predictUseCard, confirmCardTarget }) => {
   const username = useAppSelector(selectUsername)
   const allPlayersInfo = useAppSelector(selectAllPlayersInfo)
-  //   const allCharactersInfo = useAppSelector(selectAllCharactersInfo)
+  const allCharactersInfo = useAppSelector(selectAllCharactersInfo)
   const selectPlayerTarget = useAppSelector(selectSelectPlayerTarget)
   const activeCard = useAppSelector(selectActiveCard)
   const currentRoom = useAppSelector(selectCurrentRoom)
@@ -41,10 +42,10 @@ export const Oponents: React.FC<Props> = ({ predictUseCard, confirmCardTarget })
   const oponentsInfo = allPlayersInfo.filter((player: PlayerInfo) => {
     return (player.name !== username)
   })
-  // remove user player from characters info array
-  //   const charactersInfo = allCharactersInfo.filter((player: CharacterInfo) => {
-  //     return (player.name !== username)
-  //   })
+  //   remove user player from characters info array
+  const charactersInfo = allCharactersInfo.filter((player: CharacterInfo) => {
+    return (player.name !== username)
+  })
 
   function confirmPlayerTarget (target: string) {
     if (!selectPlayerTarget) return
@@ -90,6 +91,7 @@ export const Oponents: React.FC<Props> = ({ predictUseCard, confirmCardTarget })
         <TopPlayerTable
           oponentName={oponentsInfo[0].name}
           health={oponentsInfo[0].health}
+          character={charactersInfo[0].character}
           table={oponentsInfo[0].table}
           cardsInHand={new Array(oponentsInfo[0].numberOfCards).fill(0)}
           largeMagicConstant={352}
