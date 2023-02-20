@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Card } from './Card'
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { selectDeckActive, setDeckActiveFalse } from '../features/deckActiveSlice'
 import { selectCurrentRoom } from '../features/currentRoomSlice'
 import { selectUsername } from '../features/usernameSlice'
-
-import { socket } from '../socket'
 import { setCharacterUsableFalse } from '../features/characterUsableSlice'
 import { setSelectPlayerTargetFalse } from '../features/selectPlayerTargetSlice'
 import { setNextTurnTrue } from '../features/nextTurnSlice'
-import { selectTopStackCard } from '../features/topStackCardSlice'
+import { selectTopStackCard, setTopStackCard } from '../features/topStackCardSlice'
+import { type CardI } from '../types/card'
+
+import { socket } from '../socket'
 
 export const StackDeck = () => {
   const username = useAppSelector(selectUsername)
@@ -18,6 +19,16 @@ export const StackDeck = () => {
   const topStackCard = useAppSelector(selectTopStackCard)
 
   const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    socket.on('update_top_stack_card', (card: CardI) => {
+      dispatch(setTopStackCard(card))
+    })
+
+    return () => {
+      socket.off('update_top_stack_card')
+    }
+  }, [])
 
   function drawFromDeck () {
     socket.emit('draw_from_deck', { currentRoom, username })

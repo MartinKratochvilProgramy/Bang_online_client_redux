@@ -15,7 +15,7 @@ import { selectAllPlayersInfo } from '../features/allPlayersInfoSlice'
 import { selectUsername } from '../features/usernameSlice'
 import { setMyHealth } from '../features/myHealthSlice'
 import { selectPlayersActionRequiredOnStart, setPlayersActionRequiredOnStart } from '../features/playersActionRequiredOnStartSlice'
-import { setCharacterUsableFalse } from '../features/characterUsableSlice'
+import { setCharacterUsableFalse, setCharacterUsableTrue } from '../features/characterUsableSlice'
 import { setPlayersInRange } from '../features/playersInRangeSlice'
 import { selectCurrentRoom } from '../features/currentRoomSlice'
 import { setCurrentPlayer } from '../features/currentPlayerSlice'
@@ -29,6 +29,10 @@ import { setSelectPlayerTargetFalse } from '../features/selectPlayerTargetSlice'
 import { selectActiveCard, setActiveCard } from '../features/activeCardSlice'
 import { setTopStackCard } from '../features/topStackCardSlice'
 import { PlayerTable } from './PlayerTable'
+import { setDiscardingFalse } from '../features/discardingSlice'
+import { Console } from './Console'
+import { StackDeck } from './StackDeck'
+import { Oponents } from './Oponents'
 
 export const Game = () => {
   const username = useAppSelector(selectUsername)
@@ -134,36 +138,30 @@ export const Game = () => {
       }
     })
 
-    //     socket.on('update_top_stack_card', (card) => {
-    //       setTopStackCard(card)
-    //     })
+    socket.on('end_discard', () => {
+      dispatch(setDiscardingFalse())
+    })
 
-    //     socket.on('end_discard', () => {
-    //       setDiscarding(false)
-    //     })
-
-    //     socket.on('jourdonnais_can_use_barel', () => {
-    //       if (character === 'Jourdonnais') {
-    //         setCharacterUsable(true)
-    //       }
-    //     })
+    socket.on('jourdonnais_can_use_barel', () => {
+      if (character === 'Jourdonnais') {
+        dispatch(setCharacterUsableTrue())
+      }
+    })
 
     return () => {
       socket.off('my_hand')
       socket.off('known_roles')
-      //       socket.off('players_in_range')
-      //       socket.off('current_player')
-      //       socket.off('update_players_losing_health')
-      //       socket.off('update_players_with_action_required')
-      //       socket.off('indiani_active')
-      //       socket.off('duel_active')
-      //       socket.off('update_top_stack_card')
+      socket.off('players_in_range')
+      socket.off('current_player')
+      socket.off('update_players_losing_health')
+      socket.off('update_players_with_action_required')
+      socket.off('indiani_active')
+      socket.off('duel_active')
 
-      //       socket.off('end_discard')
-      //       socket.off('jourdonnais_can_use_barel')
+      socket.off('end_discard')
+      socket.off('jourdonnais_can_use_barel')
     }
-  //   }, [character, currentRoom, setCharacterUsable, username])
-  }, [])
+  }, [character, currentRoom, setCharacterUsableTrue, username])
 
   //   function confirmPlayerTarget (target) {
   //     if (!selectPlayerTarget) return
@@ -226,14 +224,6 @@ export const Game = () => {
     dispatch(setActiveCard(null))
   }
 
-  //   function setAllNotPlayable () {
-  //     const newMyHand = myHand
-  //     for (const card of newMyHand) {
-  //       card.isPlayable = false
-  //     }
-  //     setMyHand(newMyHand)
-  //   }
-
   return (
     <div id='game'>
       {characterChoiceInProgress
@@ -245,8 +235,10 @@ export const Game = () => {
         </div>
         : <>
           <div id='oponents' className='fixed z-[30]'>
-            <Oponents />
-
+            <Oponents
+              predictUseCard={predictUseCard}
+              confirmCardTarget={confirmCardTarget}
+            />
           </div>
 
           <div className='fixed flex justify-center items-center top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] m-auto z-[40]'>
@@ -254,12 +246,12 @@ export const Game = () => {
           </div>
 
           <div className='fixed flex justify-between items-end bottom-0 left-0 right-0 z-[50]'>
-            <Chat sendMessage={sendMessage} messages={messages} width={260} />
+            <Chat width={260} />
             <PlayerTable
               predictUseCard={predictUseCard}
               confirmCardTarget={confirmCardTarget}
             />
-            <Console consoleOutput={consoleOutput} />
+            <Console />
           </div>
         </>
       }

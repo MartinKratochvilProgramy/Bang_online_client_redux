@@ -24,6 +24,7 @@ import { selectEmporioState } from '../features/emporioStateSlice'
 import { Button } from './Button'
 import { selectMyDrawChoice } from '../features/myDrawChoice'
 import { CardOnTable } from './CardOnTable'
+import { selectCharacter } from '../features/characterSlice'
 
 interface Props {
   predictUseCard: (cardName: string, cardDigit: number, cardType: string) => void
@@ -36,7 +37,7 @@ export const PlayerTable: React.FC<Props> = ({ predictUseCard, confirmCardTarget
 
   const username = useAppSelector(selectUsername)
   const currentRoom = useAppSelector(selectCurrentRoom)
-  const character = useAppSelector(selectUsername)
+  const character = useAppSelector(selectCharacter)
   const myHand = useAppSelector(selectMyHand)
   const myHealth = useAppSelector(selectMyHealth)
   const characterUsable = useAppSelector(selectCharacterUsable)

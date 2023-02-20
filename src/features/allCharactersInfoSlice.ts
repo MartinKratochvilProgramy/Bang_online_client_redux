@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '../app/store'
 
-interface CharacterInfo {
+export interface CharacterInfo {
   name: string
   character: string
 }
