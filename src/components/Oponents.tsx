@@ -158,103 +158,69 @@ export const Oponents: React.FC<Props> = ({ predictUseCard, confirmCardTarget })
         </div>
       </div>
     )
-
-    //   if (oponentsInfo.length === 4) {
-    //     return (
-    //       <div className=''>
-    //         <div className='fixed z-10 flex items-end justify-start w-[490px] left-[-172px] xs:left-[-158px] top-[288px] xs:top-[348px] rotate-90 '>
-    //           <SidePlayerTable
-    //             cardsInHand={new Array(oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].numberOfCards).fill(0)}
-    //             table={oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].table}
-    //             oponentName={oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].name}
-    //             currentRoom={currentRoom}
-    //             activateCharacter={activateCharacter}
-    //             selectCardTarget={selectCardTarget}
-    //             selectPlayerTarget={selectPlayerTarget}
-    //             confirmCardTarget={confirmCardTarget}
-    //             currentPlayer={currentPlayer}
-    //             username={username}
-    //             character={charactersInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].character}
-    //             role={knownRoles[oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].name]}
-    //             characterUsable={characterUsable}
-    //             health={oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].health}
-    //             playersInRange={playersInRange}
-    //             confirmPlayerTarget={confirmPlayerTarget}
-    //             rotateDescription={-90}
-    //           />
-    //         </div>
-    //         <div className='fixed top-0 left-0 right-0 flex justify-center space-x-4 z-5'>
-    //           <div className='w-[420px] xs:w-[620px]'>
-    //             <TopPlayerTable
-    //               cardsInHand={new Array(oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].numberOfCards).fill(0)}
-    //               table={oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].table}
-    //               oponentName={oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].name}
-    //               currentRoom={currentRoom}
-    //               activateCharacter={activateCharacter}
-    //               selectCardTarget={selectCardTarget}
-    //               selectPlayerTarget={selectPlayerTarget}
-    //               confirmCardTarget={confirmCardTarget}
-    //               currentPlayer={currentPlayer}
-    //               username={username}
-    //               character={charactersInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].character}
-    //               role={knownRoles[oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].name]}
-    //               characterUsable={characterUsable}
-    //               health={oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].health}
-    //               playersInRange={playersInRange}
-    //               confirmPlayerTarget={confirmPlayerTarget}
-    //               largeMagicConstant={402}
-    //               smallMagicConstant={238}
-    //               cardClampLimit={5}
-    //             />
-    //           </div>
-    //           <div className='w-[420px] xs:w-[620px]'>
-    //             <TopPlayerTable
-    //               cardsInHand={new Array(oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].numberOfCards).fill(0)}
-    //               table={oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].table}
-    //               oponentName={oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].name}
-    //               currentRoom={currentRoom}
-    //               activateCharacter={activateCharacter}
-    //               selectCardTarget={selectCardTarget}
-    //               selectPlayerTarget={selectPlayerTarget}
-    //               confirmCardTarget={confirmCardTarget}
-    //               currentPlayer={currentPlayer}
-    //               username={username}
-    //               character={charactersInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].character}
-    //               role={knownRoles[oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].name]}
-    //               characterUsable={characterUsable}
-    //               health={oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].health}
-    //               playersInRange={playersInRange}
-    //               confirmPlayerTarget={confirmPlayerTarget}
-    //               largeMagicConstant={402}
-    //               smallMagicConstant={232}
-    //               cardClampLimit={5}
-    //             />
-    //           </div>
-    //         </div>
-    //         <div className='fixed flex items-end justify-end w-[490px] right-[-182px] xs:right-[-158px] top-[288px] xs:top-[348px] rotate-[270deg]'>
-    //           <SidePlayerTable
-    //             cardsInHand={new Array(oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].numberOfCards).fill(0)}
-    //             table={oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].table}
-    //             oponentName={oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].name}
-    //             currentRoom={currentRoom}
-    //             activateCharacter={activateCharacter}
-    //             selectCardTarget={selectCardTarget}
-    //             selectPlayerTarget={selectPlayerTarget}
-    //             confirmCardTarget={confirmCardTarget}
-    //             currentPlayer={currentPlayer}
-    //             username={username}
-    //             character={charactersInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].character}
-    //             role={knownRoles[oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].name]}
-    //             characterUsable={characterUsable}
-    //             health={oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].health}
-    //             playersInRange={playersInRange}
-    //             confirmPlayerTarget={confirmPlayerTarget}
-    //             rotateDescription={90}
-    //           />
-    //         </div>
-    //       </div>
-    //     )
-    //   }
+  } else if (oponentsInfo.length === 4) {
+    return (
+      <div className=''>
+        <div className='fixed z-10 flex items-end justify-start w-[490px] left-[-172px] xs:left-[-158px] top-[288px] xs:top-[348px] rotate-90 '>
+          <SidePlayerTable
+            role={knownRoles[oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].name]}
+            oponentName={oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].name}
+            health={oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].health}
+            character={charactersInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].character}
+            table={oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].table}
+            rotateDescription={-90}
+            cardsInHand={new Array(oponentsInfo[clamp(playerIndex + 0, allPlayersInfo.length - 1)].numberOfCards).fill(0)}
+            confirmCardTarget={confirmCardTarget}
+            confirmPlayerTarget={confirmPlayerTarget}
+          />
+        </div>
+        <div className='fixed top-0 left-0 right-0 flex justify-center space-x-4 z-5'>
+          <div className='w-[420px] xs:w-[620px]'>
+            <TopPlayerTable
+              oponentName={oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].name}
+              health={oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].health}
+              character={charactersInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].character}
+              table={oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].table}
+              cardsInHand={new Array(oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].numberOfCards).fill(0)}
+              role={knownRoles[oponentsInfo[clamp(playerIndex + 1, allPlayersInfo.length - 1)].name]}
+              confirmCardTarget={confirmCardTarget}
+              confirmPlayerTarget={confirmPlayerTarget}
+              largeMagicConstant={402}
+              smallMagicConstant={238}
+              cardClampLimit={5}
+            />
+          </div>
+          <div className='w-[420px] xs:w-[620px]'>
+            <TopPlayerTable
+              oponentName={oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].name}
+              health={oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].health}
+              character={charactersInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].character}
+              table={oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].table}
+              cardsInHand={new Array(oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].numberOfCards).fill(0)}
+              role={knownRoles[oponentsInfo[clamp(playerIndex + 2, allPlayersInfo.length - 1)].name]}
+              confirmCardTarget={confirmCardTarget}
+              confirmPlayerTarget={confirmPlayerTarget}
+              largeMagicConstant={402}
+              smallMagicConstant={238}
+              cardClampLimit={5}
+            />
+          </div>
+        </div>
+        <div className='fixed flex items-end justify-end w-[490px] right-[-182px] xs:right-[-158px] top-[288px] xs:top-[348px] rotate-[270deg]'>
+          <SidePlayerTable
+            role={knownRoles[oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].name]}
+            oponentName={oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].name}
+            health={oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].health}
+            character={charactersInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].character}
+            table={oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].table}
+            rotateDescription={90}
+            cardsInHand={new Array(oponentsInfo[clamp(playerIndex + 3, allPlayersInfo.length - 1)].numberOfCards).fill(0)}
+            confirmCardTarget={confirmCardTarget}
+            confirmPlayerTarget={confirmPlayerTarget}
+          />
+        </div>
+      </div>
+    )
 
     //   if (oponentsInfo.length === 5) {
     //     return (
