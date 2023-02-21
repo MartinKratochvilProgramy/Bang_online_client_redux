@@ -2,10 +2,12 @@ import React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { selectActiveCard, setActiveCard } from '../features/activeCardSlice'
 import { type CharacterInfo, selectAllCharactersInfo } from '../features/allCharactersInfoSlice'
-
+import { SidePlayerTable } from './SidePlayerTable'
+import { TopLeftPlayerTable } from './TopLeftPlayerTable'
+import { TopPlayerTable } from './TopPlayerTable'
+import { TopRightPlayerTable } from './TopRightPlayerTable'
 import { type PlayerInfo, selectAllPlayersInfo } from '../features/allPlayersInfoSlice'
 import { selectCharacter } from '../features/characterSlice'
-import { setCharacterUsableFalse } from '../features/characterUsableSlice'
 import { selectCurrentRoom } from '../features/currentRoomSlice'
 import { setDeckActiveFalse } from '../features/deckActiveSlice'
 import { selectKnownRoles } from '../features/knownRolesSlice'
@@ -14,13 +16,9 @@ import { setNextTurnFalse } from '../features/nextTurnSlice'
 import { setSelectCardTargetFalse } from '../features/selectCardTargetSlice'
 import { selectSelectPlayerTarget, setSelectPlayerTargetFalse } from '../features/selectPlayerTargetSlice'
 import { selectUsername } from '../features/usernameSlice'
+import clamp from '../utils/clamp'
 
 import { socket } from '../socket'
-import clamp from '../utils/clamp'
-import { SidePlayerTable } from './SidePlayerTable'
-import { TopLeftPlayerTable } from './TopLeftPlayerTable'
-import { TopPlayerTable } from './TopPlayerTable'
-import { TopRightPlayerTable } from './TopRightPlayerTable'
 
 interface Props {
   predictUseCard: (cardName: string, cardDigit: number, cardType: string) => void
@@ -54,41 +52,51 @@ export const Oponents: React.FC<Props> = ({ predictUseCard, confirmCardTarget })
   })
 
   function confirmPlayerTarget (target: string) {
+    console.log('selectPlayerTarget ', selectPlayerTarget)
+
     if (!selectPlayerTarget) return
-    if (activeCard == null) return
 
-    dispatch(setSelectPlayerTargetFalse())
-    dispatch(setSelectCardTargetFalse())
-    const cardName = activeCard.name
-    const cardDigit = activeCard.digit
-    const cardType = activeCard.type
-
-    if (cardName === 'Bang!') {
-      socket.emit('play_bang', { username, target, currentRoom, cardDigit, cardType })
-      dispatch(setNextTurnFalse())
-    } else if (cardName === 'Mancato!' && character === 'Calamity Janet') {
-      socket.emit('play_mancato_as_CJ', { target, currentRoom, cardDigit, cardType })
-      dispatch(setNextTurnFalse())
-    } else if (cardName === 'Duel') {
-      socket.emit('play_duel', { target, currentRoom, cardDigit, cardType })
-      dispatch(setNextTurnFalse())
-    } else if (cardName === 'Cat Balou') {
-      socket.emit('play_cat_ballou', { target, currentRoom, cardDigit, cardType })
-    } else if (cardName === 'Panico') {
-      socket.emit('play_panico', { target, currentRoom, cardDigit, cardType })
-    } else if (cardName === 'Prigione') {
-      socket.emit('play_prigione', { username, target, currentRoom, activeCard })
-    } else if (Object.keys(activeCard).length === 0 && character === 'Jesse Jones') {
+    if (activeCard === null && character === 'Jesse Jones') {
       // no active card and Jese jones
+      console.log('gimmie jessie')
+
       socket.emit('jesse_jones_target', { username, target, currentRoom })
-      dispatch(setCharacterUsableFalse())
+      dispatch(setSelectPlayerTargetFalse())
       dispatch(setDeckActiveFalse())
+
+      return
     }
-    if (cardName !== 'Prigione') {
-      predictUseCard(cardName, cardDigit, cardType)
-      dispatch(setMyHandNotPlayable())
+
+    if (activeCard !== null) {
+      dispatch(setSelectCardTargetFalse())
+      const cardName = activeCard.name
+      const cardDigit = activeCard.digit
+      const cardType = activeCard.type
+
+      console.log('activeCard ', activeCard)
+
+      if (cardName === 'Bang!') {
+        socket.emit('play_bang', { username, target, currentRoom, cardDigit, cardType })
+        dispatch(setNextTurnFalse())
+      } else if (cardName === 'Mancato!' && character === 'Calamity Janet') {
+        socket.emit('play_mancato_as_CJ', { target, currentRoom, cardDigit, cardType })
+        dispatch(setNextTurnFalse())
+      } else if (cardName === 'Duel') {
+        socket.emit('play_duel', { target, currentRoom, cardDigit, cardType })
+        dispatch(setNextTurnFalse())
+      } else if (cardName === 'Cat Balou') {
+        socket.emit('play_cat_ballou', { target, currentRoom, cardDigit, cardType })
+      } else if (cardName === 'Panico') {
+        socket.emit('play_panico', { target, currentRoom, cardDigit, cardType })
+      } else if (cardName === 'Prigione') {
+        socket.emit('play_prigione', { username, target, currentRoom, activeCard })
+      }
+      if (cardName !== 'Prigione') {
+        predictUseCard(cardName, cardDigit, cardType)
+        dispatch(setMyHandNotPlayable())
+      }
+      dispatch(setActiveCard(null))
     }
-    dispatch(setActiveCard(null))
   }
 
   if (oponentsInfo.length === 1) {
