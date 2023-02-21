@@ -25,7 +25,7 @@ import { type PlayerActionRequiredOnStart } from '../types/playerActionRequiredO
 import { setIndianiActiveFalse, setIndianiActiveTrue } from '../features/indianiActiveSlice'
 import { setDuelActiveFalse, setDuelActiveTrue } from '../features/duelActiveSlice'
 import { selectSelectCardTarget, setSelectCardTargetFalse } from '../features/selectCardTargetSlice'
-import { setSelectPlayerTargetFalse } from '../features/selectPlayerTargetSlice'
+import { setSelectPlayerTargetFalse, setSelectPlayerTargetTrue } from '../features/selectPlayerTargetSlice'
 import { selectActiveCard, setActiveCard } from '../features/activeCardSlice'
 import { setTopStackCard } from '../features/topStackCardSlice'
 import { PlayerTable } from './PlayerTable'
@@ -33,6 +33,8 @@ import { setDiscardingFalse } from '../features/discardingSlice'
 import { Console } from './Console'
 import { StackDeck } from './StackDeck'
 import { Oponents } from './Oponents'
+import { selectCharacter } from '../features/characterSlice'
+import { setDeckActiveTrue } from '../features/deckActiveSlice'
 
 export const Game = () => {
   const username = useAppSelector(selectUsername)
@@ -40,7 +42,7 @@ export const Game = () => {
   const playersLosingHealth = useAppSelector(selectPlayersLosingHealth)
   const allPlayersInfo = useAppSelector(selectAllPlayersInfo)
   const playersActionRequiredOnStart = useAppSelector(selectPlayersActionRequiredOnStart)
-  const character = useAppSelector(selectUsername)
+  const character = useAppSelector(selectCharacter)
   const currentRoom = useAppSelector(selectCurrentRoom)
   const selectCardTarget = useAppSelector(selectSelectCardTarget)
   const activeCard = useAppSelector(selectActiveCard)
@@ -143,8 +145,28 @@ export const Game = () => {
     })
 
     socket.on('jourdonnais_can_use_barel', () => {
+      console.log('Jourdy ', character)
+
       if (character === 'Jourdonnais') {
         dispatch(setCharacterUsableTrue())
+      }
+    })
+
+    socket.on('update_draw_choices', (characterName: string) => {
+      if (username === '') return
+      if (currentRoom === null) return
+
+      if (characterName === character) {
+        if (characterName === 'Jesse Jones') {
+          dispatch(setSelectPlayerTargetTrue())
+          dispatch(setDeckActiveTrue())
+          socket.emit('request_players_in_range', { range: 'max', currentRoom, username })
+        } else if (characterName === 'Pedro Ramirez') {
+          dispatch(setDeckActiveTrue())
+          dispatch(setCharacterUsableTrue())
+        } else {
+          socket.emit('get_my_draw_choice', { username, currentRoom, character })
+        }
       }
     })
 
@@ -157,9 +179,9 @@ export const Game = () => {
       socket.off('update_players_with_action_required')
       socket.off('indiani_active')
       socket.off('duel_active')
-
       socket.off('end_discard')
       socket.off('jourdonnais_can_use_barel')
+      socket.off('update_draw_choices')
     }
   }, [character, currentRoom, setCharacterUsableTrue, username])
 

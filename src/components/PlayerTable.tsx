@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { setActiveCard } from '../features/activeCardSlice'
 import { selectAllPlayersInfo } from '../features/allPlayersInfoSlice'
-import { selectCharacterUsable, setCharacterUsableFalse, setCharacterUsableTrue } from '../features/characterUsableSlice'
+import { selectCharacterUsable, setCharacterUsableFalse } from '../features/characterUsableSlice'
 import { selectCurrentPlayer } from '../features/currentPlayerSlice'
 import { selectCurrentRoom } from '../features/currentRoomSlice'
-import { setDeckActiveFalse, setDeckActiveTrue } from '../features/deckActiveSlice'
+import { setDeckActiveFalse } from '../features/deckActiveSlice'
 import { selectDiscarding, setDiscardingFalse, setDiscardingTrue } from '../features/discardingSlice'
 import { selectIsLosingHealth, setIsLosingHealthFalse } from '../features/isLosingHealthSlice'
 import { selectMyHand, setMyHand, setMyHandNotPlayable } from '../features/myHandSlice'
 import { selectMyHealth } from '../features/myHealthSlice'
 import { selectNextTurn, setNextTurnTrue } from '../features/nextTurnSlice'
 import { setSelectCardTargetFalse } from '../features/selectCardTargetSlice'
-import { selectSelectPlayerTarget, setSelectPlayerTargetFalse, setSelectPlayerTargetTrue } from '../features/selectPlayerTargetSlice'
+import { selectSelectPlayerTarget, setSelectPlayerTargetFalse } from '../features/selectPlayerTargetSlice'
 import { selectUsername } from '../features/usernameSlice'
 import { type CardI } from '../types/card'
 import getCharacterDescription from '../utils/getCharacterDescription'
@@ -61,25 +61,7 @@ export const PlayerTable: React.FC<Props> = ({ predictUseCard, confirmCardTarget
       setRole(role)
     })
 
-    socket.on('update_draw_choices', (characterName) => {
-      if (username === '') return
-      if (currentRoom === null) return
-      if (characterName === character) {
-        if (characterName === 'Jesse Jones') {
-          dispatch(setSelectPlayerTargetTrue())
-          dispatch(setDeckActiveTrue())
-          socket.emit('request_players_in_range', { range: 'max', currentRoom, username })
-        } else if (characterName === 'Pedro Ramirez') {
-          dispatch(setDeckActiveTrue())
-          dispatch(setCharacterUsableTrue())
-        } else {
-          socket.emit('get_my_draw_choice', { username, currentRoom, character })
-        }
-      }
-    })
-
     return () => {
-      socket.off('update_draw_choices')
       socket.off('my_role')
     }
   }, [])
