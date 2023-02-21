@@ -39,7 +39,7 @@ export const TopRightPlayerTable: React.FC<Props> = ({
   const selectPlayerTarget = useAppSelector(selectSelectPlayerTarget)
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const characterSource = require(`../img/gfx/characters/${character.replace(/\s/g, '')}png`)
+  const characterSource = require(`../img/gfx/characters/${character.replace(/\s/g, '')}.png`)
 
   let roleSource
   if (role === null || role === undefined) {
