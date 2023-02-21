@@ -6,10 +6,11 @@ export const Console = () => {
   const [consoleOutput, setConsoleOutput] = useState<string[]>([])
 
   useEffect(() => {
-    socket.on('console', (consoleMessage: string) => {
-      const newConsoleOutput = [...consoleOutput]
-      newConsoleOutput.push(consoleMessage)
-      setConsoleOutput(newConsoleOutput)
+    socket.on('console', (consoleMessage: string[]) => {
+      for (let i = 0; i < consoleMessage.length; i++) {
+        const message = consoleMessage[i]
+        setConsoleOutput(consoleOutput => [...consoleOutput, message])
+      }
     })
 
     return () => {
