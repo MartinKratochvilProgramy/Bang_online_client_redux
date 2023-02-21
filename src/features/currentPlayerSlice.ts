@@ -9,7 +9,7 @@ const initialState: CurrentPlayerSlice = {
   value: ''
 }
 
-export const currentPlayerSlice = createSlice({
+export const currentPlayer = createSlice({
   name: 'currentPlayer',
   initialState,
   reducers: {
@@ -19,8 +19,8 @@ export const currentPlayerSlice = createSlice({
   }
 })
 
-export const { setCurrentPlayer } = currentPlayerSlice.actions
+export const { setCurrentPlayer } = currentPlayer.actions
 
 export const selectCurrentPlayer = (state: RootState) => state.currentPlayer.value
 
-export default currentPlayerSlice.reducer
+export default currentPlayer.reducer
