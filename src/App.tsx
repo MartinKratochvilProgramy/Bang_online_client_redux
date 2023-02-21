@@ -8,25 +8,30 @@ import { setPlayerCharacterChoice } from './features/playerCharacterChoice'
 import { setCharacterChoiceInProgressTrue, setCharacterChoiceInProgressFalse } from './features/characterChoiceInProgressSlice'
 import { setAllPlayersInfo } from './features/allPlayersInfoSlice'
 import { setAllCharactersInfo } from './features/allCharactersInfoSlice'
-import { setMyDrawChoice } from './features/myDrawChoice'
+import { selectMyDrawChoice, setMyDrawChoice } from './features/myDrawChoice'
 import { setCharacter } from './features/characterSlice'
 import { setRooms } from './features/roomsSlice'
 import { setNextEmporioTurn } from './features/nextEmporioTurnSlice'
-import { setEmporioState } from './features/emporioStateSlice'
-// import { type User } from './types/user'
-// import { type Card } from './types/card'
+import { selectEmporioState, setEmporioState } from './features/emporioStateSlice'
 import './App.css'
 import { RoomSelect } from './components/RoomSelect'
 import { Room } from './components/Room'
 import { Game } from './components/Game'
 import { setPlayers } from './features/playersSlice'
+import { selectWinner, setWinner } from './features/winnerSlice'
 
 import { socket } from './socket'
+import { GameEnd } from './components/GameEnd'
+import { DrawChoice } from './components/DrawChoice'
+import { EmporioChoice } from './components/EmporioChoice'
 
 function App () {
   const currentRoom = useAppSelector(selectCurrentRoom)
   const gameStarted = useAppSelector(selectGameStarted)
   const username = useAppSelector(selectUsername)
+  const winner = useAppSelector(selectWinner)
+  const myDrawChoice = useAppSelector(selectMyDrawChoice)
+  const emporioState = useAppSelector(selectEmporioState)
 
   const dispatch = useAppDispatch()
 
@@ -92,9 +97,9 @@ function App () {
       dispatch(setNextEmporioTurn(state.nextEmporioTurn))
     })
 
-    //   socket.on('game_ended', (winner) => {
-    //     setWinner(winner)
-    //   })
+    socket.on('game_ended', (winner) => {
+      dispatch(setWinner(winner))
+    })
 
     return () => {
       //     socket.off('username_changed')
@@ -112,35 +117,6 @@ function App () {
   }, [currentRoom, username])
   // }, [consoleOutput, currentRoom, username])
 
-  // function getEmporioCard (card: Card) {
-  //   if (username !== nextEmporioTurn) return
-  //   socket.emit('get_emporio_card', { username, currentRoom, card })
-
-  //   const newEmporioState = emporioState
-  //   const cardIndex = myHand.findIndex(foundCard => (foundCard.name === card.name && foundCard.digit === card.digit && foundCard.type === card.type))
-  //   newEmporioState.splice(cardIndex, 1)
-  //   setEmporioState(newEmporioState)
-  // }
-
-  // function getChoiceCard (card: Card) {
-  //   setCharacterUsable(false)
-  //   if (character === 'Kit Carlson') {
-  //     setMyHand([...myHand, card])
-
-  //     const newMyDrawChoice = myDrawChoice
-  //     newMyDrawChoice.splice(myDrawChoice.findIndex((foundCard: Card) => (foundCard.name === card.name && foundCard.digit === card.digit && foundCard.type === card.type)))
-  //     setMyDrawChoice(newMyDrawChoice)
-
-  //     socket.emit('get_choice_card_KC', { username, currentRoom, card })
-  //   } else if (character === 'Lucky Duke') {
-  //     setMyHand([...myHand, card])
-
-  //     setMyDrawChoice([])
-
-  //     socket.emit('get_choice_card_LD', { username, currentRoom, card })
-  //   }
-  // }
-
   return (
     <div className="App flex flex-col justify-start items-center h-screen">
       {currentRoom === null
@@ -157,15 +133,15 @@ function App () {
       {gameStarted &&
         <>
           <Game />
-          {/* <div className='fixed flex justify-center items-center top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-[1100] m-auto'>
-            {winner && <GameEnd winner={winner} setCurrentRoom={setCurrentRoom} />}
+          <div className='fixed flex justify-center items-center top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-[1100] m-auto'>
+            {winner !== null && <GameEnd />}
           </div>
           <div className='fixed flex justify-center items-center top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-[1000] m-auto'>
-            {myDrawChoice.length > 0 && <DrawChoice cards={myDrawChoice} getChoiceCard={getChoiceCard} />}
+            {myDrawChoice.length > 0 && <DrawChoice />}
           </div>
           <div className='fixed flex justify-center items-center top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-[1000] m-auto'>
-            {emporioState.length > 0 && <EmporionChoice cards={emporioState} getEmporioCard={getEmporioCard} username={username} nextEmporioTurn={nextEmporioTurn} />}
-          </div> */}
+            {emporioState.length > 0 && <EmporioChoice />}
+          </div>
 
         </>
       }
