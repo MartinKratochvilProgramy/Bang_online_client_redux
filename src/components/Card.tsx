@@ -149,8 +149,6 @@ export const Card: React.FC<Props> = ({ card, predictUseCard, predictUseBlueCard
       socket.emit('place_blue_card_on_table', { username, currentRoom, card })
       predictUseBlueCard(cardName, cardDigit, cardType)
     } else if (cardName === 'Prigione') {
-      console.log('prison')
-
       dispatch(setActiveCard(card))
       dispatch(setSelectPlayerTargetTrue())
       socket.emit('request_players_in_range', { range: 'max_not_sheriff', currentRoom, username })

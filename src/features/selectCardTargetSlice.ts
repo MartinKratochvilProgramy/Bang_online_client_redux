@@ -6,7 +6,7 @@ export interface SelectCardTargetSlice {
 }
 
 const initialState: SelectCardTargetSlice = {
-  value: true
+  value: false
 }
 
 export const selectCardTarget = createSlice({
