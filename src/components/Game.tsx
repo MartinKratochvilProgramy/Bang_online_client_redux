@@ -163,42 +163,6 @@ export const Game = () => {
     }
   }, [character, currentRoom, setCharacterUsableTrue, username])
 
-  //   function confirmPlayerTarget (target) {
-  //     if (!selectPlayerTarget) return
-  //     setSelectPlayerTarget(false)
-  //     setSelectCardTarget(false)
-  //     const cardName = activeCard.name
-  //     const cardDigit = activeCard.digit
-  //     const cardType = activeCard.type
-
-  //     if (cardName === 'Bang!') {
-  //       socket.emit('play_bang', { username, target, currentRoom, cardDigit, cardType })
-  //       setNextTurn(false)
-  //     } else if (cardName === 'Mancato!' && character === 'Calamity Janet') {
-  //       socket.emit('play_mancato_as_CJ', { target, currentRoom, cardDigit, cardType })
-  //       setNextTurn(false)
-  //     } else if (cardName === 'Duel') {
-  //       socket.emit('play_duel', { target, currentRoom, cardDigit, cardType })
-  //       setNextTurn(false)
-  //     } else if (cardName === 'Cat Balou') {
-  //       socket.emit('play_cat_ballou', { target, currentRoom, cardDigit, cardType })
-  //     } else if (cardName === 'Panico') {
-  //       socket.emit('play_panico', { target, currentRoom, cardDigit, cardType })
-  //     } else if (cardName === 'Prigione') {
-  //       socket.emit('play_prigione', { username, target, currentRoom, activeCard })
-  //     } else if (Object.keys(activeCard).length === 0 && character === 'Jesse Jones') {
-  //       // no active card and Jese jones
-  //       socket.emit('jesse_jones_target', { username, target, currentRoom })
-  //       setCharacterUsable(false)
-  //       setDeckActive(false)
-  //     }
-  //     if (cardName !== 'Prigione') {
-  //       predictUseCard(cardName, cardDigit, cardType)
-  //       setAllNotPlayable()
-  //     }
-  //     setActiveCard({})
-  //   }
-
   function predictUseCard (cardName: string, cardDigit: number, cardType: string) {
     // place card on stack
     dispatch(setTopStackCard({ name: cardName, digit: cardDigit, type: cardType, isPlayable: false }))
