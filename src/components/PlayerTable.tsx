@@ -15,8 +15,6 @@ import { setSelectCardTargetFalse } from '../features/selectCardTargetSlice'
 import { selectSelectPlayerTarget, setSelectPlayerTargetFalse, setSelectPlayerTargetTrue } from '../features/selectPlayerTargetSlice'
 import { selectUsername } from '../features/usernameSlice'
 import { type CardI } from '../types/card'
-
-import { socket } from '../socket'
 import getCharacterDescription from '../utils/getCharacterDescription'
 import getRoleDescription from '../utils/getRoleDescription'
 import { Card } from './Card'
@@ -25,6 +23,8 @@ import { Button } from './Button'
 import { selectMyDrawChoice } from '../features/myDrawChoice'
 import { CardOnTable } from './CardOnTable'
 import { selectCharacter } from '../features/characterSlice'
+
+import { socket } from '../socket'
 
 interface Props {
   predictUseCard: (cardName: string, cardDigit: number, cardType: string) => void

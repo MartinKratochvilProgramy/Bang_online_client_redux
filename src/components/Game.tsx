@@ -22,7 +22,7 @@ import { setCurrentPlayer } from '../features/currentPlayerSlice'
 import { type PlayerLosingHealth } from '../types/playersLosingHealth'
 import { setIsLosingHealthFalse, setIsLosingHealthTrue } from '../features/isLosingHealthSlice'
 import { type PlayerActionRequiredOnStart } from '../types/playerActionRequiredOnStart'
-import { setIndianiActiveTrue } from '../features/indianiActiveSlice'
+import { setIndianiActiveFalse, setIndianiActiveTrue } from '../features/indianiActiveSlice'
 import { setDuelActiveFalse, setDuelActiveTrue } from '../features/duelActiveSlice'
 import { selectSelectCardTarget, setSelectCardTargetFalse } from '../features/selectCardTargetSlice'
 import { setSelectPlayerTargetFalse } from '../features/selectPlayerTargetSlice'
@@ -126,7 +126,7 @@ export const Game = () => {
       if (state) {
         dispatch(setIndianiActiveTrue())
       } else {
-        dispatch(setIndianiActiveTrue())
+        dispatch(setIndianiActiveFalse())
       }
     })
 
