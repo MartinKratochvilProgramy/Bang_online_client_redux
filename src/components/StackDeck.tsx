@@ -58,6 +58,7 @@ export const StackDeck = () => {
       {topStackCard !== null &&
         <Card
           card={topStackCard}
+          stackCard={true}
           predictUseCard={() => {}}
           predictUseBlueCard={() => {}}
           key={`${topStackCard.name}-${topStackCard.digit}-${topStackCard.type}`}

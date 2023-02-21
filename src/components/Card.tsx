@@ -22,10 +22,11 @@ interface Props {
   card: CardI
   predictUseCard: (cardName: string, cardDigit: number, cardType: string) => void
   predictUseBlueCard: (cardName: string, cardDigit: number, cardType: string) => void
+  stackCard?: boolean
   onClick?: () => void
 }
 
-export const Card: React.FC<Props> = ({ card, predictUseCard, predictUseBlueCard, onClick }) => {
+export const Card: React.FC<Props> = ({ card, predictUseCard, predictUseBlueCard, stackCard, onClick }) => {
   const username = useAppSelector(selectUsername)
   const character = useAppSelector(selectCharacter)
   const currentRoom = useAppSelector(selectCurrentRoom)
@@ -155,12 +156,12 @@ export const Card: React.FC<Props> = ({ card, predictUseCard, predictUseBlueCard
   }
 
   let styles
-  if (isPlayable) {
+  if (isPlayable && stackCard === undefined) {
     styles = { color: 'red', border: 'solid 2px red', cursor: 'pointer' }
   }
-  // if (discarding) {
-  //   styles = { color: 'red', border: 'solid 2px red', cursor: 'pointer' }
-  // }
+  if (discarding && stackCard === undefined) {
+    styles = { color: 'red', border: 'solid 2px red', cursor: 'pointer' }
+  }
 
   if (cardName === undefined) return null
 
