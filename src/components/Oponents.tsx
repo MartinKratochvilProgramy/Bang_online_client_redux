@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { selectActiveCard, setActiveCard } from '../features/activeCardSlice'
 import { type CharacterInfo, selectAllCharactersInfo } from '../features/allCharactersInfoSlice'
@@ -13,7 +13,6 @@ import { setDeckActiveFalse } from '../features/deckActiveSlice'
 import { selectKnownRoles } from '../features/knownRolesSlice'
 import { setMyHandNotPlayable } from '../features/myHandSlice'
 import { setNextTurnFalse } from '../features/nextTurnSlice'
-import { setSelectCardTargetFalse } from '../features/selectCardTargetSlice'
 import { selectSelectPlayerTarget, setSelectPlayerTargetFalse } from '../features/selectPlayerTargetSlice'
 import { selectUsername } from '../features/usernameSlice'
 import clamp from '../utils/clamp'
@@ -37,6 +36,10 @@ export const Oponents: React.FC<Props> = ({ predictUseCard, confirmCardTarget })
 
   const dispatch = useAppDispatch()
 
+  useEffect(() => {
+    console.log('Opponents')
+  }, [])
+
   const playerIndex = allPlayersInfo.findIndex((player: PlayerInfo) => {
     // index of user player
     return (player.name === username)
@@ -58,8 +61,6 @@ export const Oponents: React.FC<Props> = ({ predictUseCard, confirmCardTarget })
 
     if (activeCard === null && character === 'Jesse Jones') {
       // no active card and Jese jones
-      console.log('gimmie jessie')
-
       socket.emit('jesse_jones_target', { username, target, currentRoom })
       dispatch(setSelectPlayerTargetFalse())
       dispatch(setDeckActiveFalse())
@@ -68,12 +69,10 @@ export const Oponents: React.FC<Props> = ({ predictUseCard, confirmCardTarget })
     }
 
     if (activeCard !== null) {
-      dispatch(setSelectCardTargetFalse())
+      dispatch(setSelectPlayerTargetFalse())
       const cardName = activeCard.name
       const cardDigit = activeCard.digit
       const cardType = activeCard.type
-
-      console.log('activeCard ', activeCard)
 
       if (cardName === 'Bang!') {
         socket.emit('play_bang', { username, target, currentRoom, cardDigit, cardType })

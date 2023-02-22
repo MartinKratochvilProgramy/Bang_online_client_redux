@@ -34,7 +34,7 @@ export const CardOnTable: React.FC<Props> = ({ card, confirmCardTarget }) => {
   }
 
   let styles
-  if (card.isPlayable || selectCardTarget) {
+  if (card.isPlayable) {
     styles = { color: 'red', border: 'solid 2px red', cursor: 'pointer' }
   } else {
     styles = { cursor: 'auto' }

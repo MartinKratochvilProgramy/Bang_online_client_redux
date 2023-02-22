@@ -50,7 +50,12 @@ export const StackDeck = () => {
 
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
   if (topStackCard !== null && topStackCard.isPlayable) {
-    topStackCard.isPlayable = false
+    try {
+      topStackCard.isPlayable = false
+    } catch (error) {
+      console.log(error)
+      console.log(topStackCard)
+    }
   }
 
   return (

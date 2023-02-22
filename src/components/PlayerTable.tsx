@@ -57,7 +57,9 @@ export const PlayerTable: React.FC<Props> = ({ predictUseCard, confirmCardTarget
   }, [allPlayersInfo])
 
   useEffect(() => {
-    socket.on('my_role', role => {
+    socket.on('my_role', (role: string) => {
+      console.log(role)
+
       setRole(role)
     })
 
